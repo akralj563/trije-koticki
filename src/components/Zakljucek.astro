@@ -1,14 +1,14 @@
-﻿---
+---
 import Motiv from './Motiv.astro';
 import { kontakt, navigacija, znamka } from '../data/vsebina';
 const leto = new Date().getFullYear();
 ---
 
-<section id="kontakt" class="kontakt" aria-labelledby="kontakt-naslov">
+<section id="kontakt" class="kontakt" data-ton="kontakt" aria-labelledby="kontakt-naslov">
   <div class="ovoj kontakt__mreza">
     <Motiv vrsta="cvet" class="kontakt__cvet" />
-    <h2 id="kontakt-naslov" data-razkrij>{kontakt.naslov}</h2>
-    <div class="kontakt__besedilo" data-razkrij>
+    <h2 id="kontakt-naslov" data-razkrij="levo">{kontakt.naslov}</h2>
+    <div class="kontakt__besedilo" data-razkrij="desno">
       <p class="kontakt__misel">{kontakt.besedilo}</p>
       <!-- PROTOTIP: dejanski kontakt (e-pošta, telefon, kraj) dodamo po potrditvi. -->
       <p class="kontakt__status">{kontakt.status}</p>
@@ -18,7 +18,7 @@ const leto = new Date().getFullYear();
 
 <footer class="noga" data-temno>
   <div class="ovoj">
-    <div class="noga__vrh">
+    <div class="noga__vrh" data-razkrij>
       <!-- DELOVNO IME — zamenjaj po potrditvi. -->
       <p class="noga__znamka">
         <span>{znamka.ime}</span>
@@ -39,8 +39,13 @@ const leto = new Date().getFullYear();
 </footer>
 
 <style>
+  /* Zaključni poziv: skoraj celozaslonska kompozicija */
   .kontakt {
     position: relative;
+    min-height: 88vh;
+    min-height: 88svh;
+    display: grid;
+    align-content: center;
     padding-block: var(--prostor-sekcije);
     background:
       radial-gradient(60% 80% at 100% 100%, color-mix(in srgb, var(--glina) 18%, transparent), transparent 70%),
@@ -50,6 +55,7 @@ const leto = new Date().getFullYear();
 
   .kontakt__mreza {
     position: relative;
+    width: 100%;
     display: grid;
     gap: 2.5rem;
   }

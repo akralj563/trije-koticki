@@ -2,7 +2,8 @@
 import { navigacija, znamka } from '../data/vsebina';
 ---
 
-<header class="glava" data-glava>
+<!-- na-temnem: stran se začne nad temnim herojem; skript stanje sproti posodablja. -->
+<header class="glava na-temnem" data-glava>
   <div class="glava__notranje">
     <!-- DELOVNO IME »Trije kotički« — zamenjaj po potrditvi imena znamke. -->
     <a class="glava__znamka" href="#vrh">
@@ -174,6 +175,13 @@ import { navigacija, znamka } from '../data/vsebina';
     font-size: 0.72rem;
     letter-spacing: 0.04em;
     color: var(--besedilo-mehko);
+  }
+
+  /* Na zelo ozkih zaslonih (320 px) bi se opis prelomil v več vrstic in izrinil hero naslov. */
+  @media (max-width: 22rem) {
+    .glava__opis {
+      display: none;
+    }
   }
 
   .glava__gumb {

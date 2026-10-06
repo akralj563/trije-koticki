@@ -50,6 +50,26 @@ export const uvod = {
     { href: '#koticki', oznaka: 'Razišči kotičke' },
     { href: '#zeliscni', oznaka: 'Izbrana zelišča' },
   ],
+  kazalnik: { href: '#zgodba', oznaka: 'Pomakni se' },
+};
+
+// Celozaslonski hero s posnetkom, ki ga vodi pomikanje (src/components/ScrollVideoHero.astro).
+// Datoteki v public/video/ še nista dodani; dokler ju ni, se prikaže `nadomestna` fotografija
+// brez scroll prostora. Preverjanje: npm run preveri:video (glej docs/NAPREDEK.md).
+export const heroVizual = {
+  video: '/video/hero-scroll.mp4',
+  poster: '/video/hero-poster.avif',
+  nadomestna: slike.kosara,
+  // Oznaka ostane, dokler posnetek ali fotografija nista potrjeno gradivo naročnice.
+  oznaka: 'Začasni vizual',
+  // Žarišče za object-position: pomemben del kadra ostane viden pri 390 in 1440 px.
+  fokus: { mobilno: '50% 55%', namizje: '50% 50%' },
+  // Višina celotnega hero prostora v svh (vključno s 100svh pripetega prizora).
+  razdalja: { mobilno: 200, namizje: 290 },
+  // Delež razlike med trenutnim in ciljnim časom, ki ga posnetek dohiti v enem okvirju (60 fps).
+  glajenje: 0.16,
+  // Faze glede na napredek pomikanja (0–1): kdaj besedilo odide in kdaj se prizor zlije v naslednjo sekcijo.
+  faze: { besediloOd: 0.18, besediloDo: 0.5, prehodOd: 0.8 },
 };
 
 export const zgodba = {

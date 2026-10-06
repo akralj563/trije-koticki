@@ -1,4 +1,4 @@
-﻿---
+---
 import Motiv from './Motiv.astro';
 import { energija } from '../data/vsebina';
 // Opisi, trajanje in cene storitev še niso prejeti; seznam vodi do povpraševanja.
@@ -9,7 +9,7 @@ import { energija } from '../data/vsebina';
     <div class="energija__krogi" data-globina="16"><Motiv vrsta="krogi" /></div>
   </div>
   <div class="ovoj energija__mreza">
-    <div class="energija__glava" data-razkrij>
+    <div class="energija__glava" data-razkrij="levo">
       <p class="nadnaslov">Energijski kotiček</p>
       <h2 id="energija-naslov">{energija.podnaslov}</h2>
     </div>

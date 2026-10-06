@@ -1,4 +1,4 @@
-﻿---
+---
 import { Image } from 'astro:assets';
 import Motiv from './Motiv.astro';
 import { zelisca } from '../data/vsebina';
@@ -11,7 +11,7 @@ const izbor = zelisca.izbor.map((z) => ({ ...z, motiv: z.slika ? null : motivi[m
 
 <section id="zeliscni" class="zelisca" data-ton="zelisca" aria-labelledby="zelisca-naslov">
   <div class="ovoj zelisca__mreza">
-    <div class="zelisca__uvod" data-razkrij>
+    <div class="zelisca__uvod" data-razkrij="levo">
       <p class="nadnaslov">Zeliščni kotiček</p>
       <h2 id="zelisca-naslov">Izbrano iz zeliščnega kotička</h2>
       <p class="zelisca__besedilo">{zelisca.uvod}</p>

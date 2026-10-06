@@ -19,7 +19,7 @@ const { naslov, opis } = Astro.props;
     <!-- PROTOTIP: indeksiranje je onemogočeno. Pred objavo pregledaj (glej docs/NAPREDEK.md). -->
     <meta name="robots" content="noindex, nofollow" />
     <meta name="description" content={opis} />
-    <meta name="theme-color" content="#F5F0E6" />
+    <meta name="theme-color" content="#16231C" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{naslov}</title>
     <script is:inline>
@@ -41,6 +41,7 @@ const { naslov, opis } = Astro.props;
       <div class="atmosfera__nakit"></div>
       <div class="atmosfera__zelisca"></div>
       <div class="atmosfera__energija"></div>
+      <div class="atmosfera__kontakt"></div>
     </div>
     <slot />
   </body>

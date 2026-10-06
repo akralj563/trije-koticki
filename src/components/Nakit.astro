@@ -1,4 +1,4 @@
-﻿---
+---
 import Motiv from './Motiv.astro';
 import { nakit } from '../data/vsebina';
 // Vizualni uvod v nakit. Imena, materiali in cene kosov še niso prejeti, zato jih ne prikazujemo.
@@ -7,7 +7,7 @@ import { nakit } from '../data/vsebina';
 <section id="unikatni" class="nakit" data-ton="nakit" aria-labelledby="nakit-naslov">
   <div class="ovoj">
     <div class="nakit__vrh">
-      <div class="nakit__glava" data-razkrij>
+      <div class="nakit__glava" data-razkrij="levo">
         <p class="nadnaslov">Unikatni kotiček</p>
         <h2 id="nakit-naslov">
           <span>{nakit.majhen[0]}</span>
@@ -21,7 +21,7 @@ import { nakit } from '../data/vsebina';
     </div>
 
     <div class="nakit__sredina">
-      <div class="nakit__besedilo" data-razkrij>
+      <div class="nakit__besedilo" data-razkrij="desno">
         {nakit.odstavki.map((o) => <p>{o}</p>)}
       </div>
       <ul class="nakit__namere" data-stagger>

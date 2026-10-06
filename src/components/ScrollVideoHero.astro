@@ -1,0 +1,425 @@
+---
+// Celozaslonski hero. Če obstaja public/video/hero-scroll.mp4, pomikanje vodi predvajanje posnetka
+// (logika v src/scripts/scrollVideo.ts). Brez posnetka, brez JS, pri prefers-reduced-motion ali
+// Save-Data ostane mirna 100svh slika z vso vsebino.
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { Image } from 'astro:assets';
+import { uvod, heroVizual as hv } from '../data/vsebina';
+
+// Ob buildu preverimo, ali datoteki res obstajata: tako stran ne zahteva manjkajočih virov (404).
+const javno = (pot: string) => existsSync(join(process.cwd(), 'public', pot));
+const imaVideo = javno(hv.video);
+const imaPoster = javno(hv.poster);
+
+const spremenljivke = [
+  `--hero-fokus-m: ${hv.fokus.mobilno}`,
+  `--hero-fokus-d: ${hv.fokus.namizje}`,
+  `--hero-razdalja-m: ${hv.razdalja.mobilno}`,
+  `--hero-razdalja-d: ${hv.razdalja.namizje}`,
+].join('; ');
+---
+
+<section
+  id="vrh"
+  class="hero"
+  aria-labelledby="uvod-naslov"
+  style={spremenljivke}
+  data-hero
+  data-glajenje={hv.glajenje}
+  data-faze={JSON.stringify(hv.faze)}
+>
+  <script is:inline define:vars={{ imaVideo }}>
+    // Odločitev pred prvim izrisom, da se višina hero prostora pozneje ne spremeni (brez layout shifta).
+    var h = document.documentElement;
+    var c = navigator.connection;
+    if (imaVideo && !(c && c.saveData) && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+      h.classList.add('hero-scrub');
+    }
+  </script>
+
+  <div class="hero__scena">
+    <div class="hero__medij" aria-hidden="true" data-hero-medij>
+      {imaPoster ? (
+        <img class="hero__slika" src={hv.poster} alt="" loading="eager" fetchpriority="high" decoding="async" />
+      ) : (
+        <Image
+          class="hero__slika"
+          src={hv.nadomestna.src}
+          alt=""
+          widths={[hv.nadomestna.src.width]}
+          sizes="100vw"
+          loading="eager"
+          fetchpriority="high"
+        />
+      )}
+      {imaVideo && (
+        <video
+          class="hero__video"
+          data-hero-video
+          data-src={hv.video}
+          muted
+          playsinline
+          preload="none"
+          disablepictureinpicture
+          disableremoteplayback
+          tabindex="-1"
+        ></video>
+      )}
+    </div>
+    <div class="hero__tema" aria-hidden="true"></div>
+    <div class="hero__prehod" aria-hidden="true" data-hero-prehod></div>
+    <!-- Območje, nad katerim je glava svetla (glej Glava.astro, data-temno). -->
+    <div class="hero__meja" aria-hidden="true" data-temno></div>
+
+    <div class="ovoj hero__vsebina" data-hero-vsebina>
+      <p class="hero__nadnaslov" data-uvod>{uvod.pozdrav}</p>
+      <h1 id="uvod-naslov" class="hero__naslov">
+        {uvod.naslov.map((v) => (
+          <span class="hero__vrstica"><span data-uvod-vrstica>{v}</span></span>
+        ))}
+      </h1>
+      <p class="hero__povzetek" data-uvod>{uvod.besedilo}</p>
+      <div class="hero__pozivi" data-uvod>
+        <a class="gumb hero__gumb" href={uvod.pozivi[0].href}>{uvod.pozivi[0].oznaka}</a>
+        <a class="gumb hero__gumb hero__gumb--obroba" href={uvod.pozivi[1].href}>{uvod.pozivi[1].oznaka}</a>
+      </div>
+    </div>
+
+    <a class="hero__kazalnik" href={uvod.kazalnik.href} data-hero-kazalnik>
+      <span>{uvod.kazalnik.oznaka}</span>
+      <span class="hero__kazalnik-crta" aria-hidden="true"></span>
+    </a>
+    {hv.oznaka && <p class="znacka hero__znacka">{hv.oznaka}</p>}
+  </div>
+</section>
+
+<style>
+  .hero {
+    --temna: 13 22 17;
+    position: relative;
+    /* clip (ne hidden): ne ustvari scroll vsebnika, zato sticky deluje */
+    overflow: clip;
+    background: var(--gozd-globok);
+    color: var(--podlaga);
+  }
+
+  /* Prizor: vedno vidna višina zaslona. svh = viden del, ko je naslovna vrstica brskalnika prikazana,
+     zato besedilo in CTA nikoli ne padeta pod vrstico. */
+  .hero__scena {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: grid;
+    align-content: end;
+  }
+
+  /* Medij sega čez celoten dinamični viewport: ko se vrstica skrije, spodaj ne ostane pas. */
+  .hero__medij {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 100%;
+    overflow: hidden;
+    background: var(--gozd-globok);
+  }
+
+  .hero__medij :global(.hero__slika),
+  .hero__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--hero-fokus-m);
+  }
+
+  .hero__video {
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+
+  .hero__video.je-pripravljen {
+    opacity: 1;
+  }
+
+  /* Temen preliv: besedilo ima kontrast ne glede na kader posnetka */
+  .hero__tema {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, rgb(var(--temna) / 0.62) 0, rgb(var(--temna) / 0) 9rem),
+      linear-gradient(
+        0deg,
+        rgb(var(--temna) / 0.92) 0%,
+        rgb(var(--temna) / 0.78) 42%,
+        rgb(var(--temna) / 0.38) 72%,
+        rgb(var(--temna) / 0.22) 100%
+      );
+  }
+
+  /* Mehak rob v naslednjo (svetlo) sekcijo; v scrub načinu se okrepi proti koncu pomika. */
+  .hero__prehod {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 2.5rem;
+    pointer-events: none;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--podlaga) 0%, transparent), var(--podlaga));
+  }
+
+  .hero__meja {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: calc(100% - 2.5rem);
+    pointer-events: none;
+  }
+
+  .hero__vsebina {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    display: grid;
+    gap: clamp(0.9rem, 0.6rem + 1.4svh, 1.75rem);
+    justify-items: start;
+    padding-top: calc(var(--glava-visina) + 1rem);
+    padding-bottom: clamp(5.5rem, 4rem + 5svh, 8rem);
+    text-shadow: 0 1px 24px rgb(var(--temna) / 0.35);
+  }
+
+  .hero__nadnaslov {
+    max-width: 34rem;
+    font-family: var(--pisava-naslovi);
+    font-style: italic;
+    font-size: var(--fs-uvod);
+    line-height: 1.35;
+    color: var(--zarenje);
+  }
+
+  .hero__naslov {
+    font-size: clamp(2.6rem, 1.2rem + 7vw, 8.25rem);
+    font-size: min(clamp(2.6rem, 1.2rem + 7vw, 8.25rem), 10.5vh);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    font-variation-settings: 'opsz' 72;
+  }
+
+  @supports (height: 1svh) {
+    .hero__naslov {
+      font-size: min(clamp(2.6rem, 1.2rem + 7vw, 8.25rem), 10.5svh);
+    }
+  }
+
+  .hero__vrstica {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.08em;
+  }
+
+  .hero__vrstica > span {
+    display: inline-block;
+  }
+
+  .hero__vrstica:nth-child(2) {
+    padding-left: clamp(1rem, 0.25rem + 5vw, 6rem);
+    font-style: italic;
+    color: var(--zarenje);
+  }
+
+  .hero__vrstica:nth-child(3) {
+    padding-left: clamp(0.5rem, 0.1rem + 2.5vw, 3rem);
+  }
+
+  .hero__povzetek {
+    max-width: 31rem;
+    font-size: var(--fs-uvod);
+    line-height: 1.55;
+    color: color-mix(in srgb, var(--podlaga) 90%, transparent);
+  }
+
+  .hero__pozivi {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+  }
+
+  .hero__gumb {
+    background: var(--podlaga);
+    color: var(--gozd);
+    text-shadow: none;
+  }
+
+  .hero__gumb:hover {
+    background: var(--zarenje);
+  }
+
+  .hero__gumb--obroba {
+    background: rgb(var(--temna) / 0.25);
+    color: var(--podlaga);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--podlaga) 55%, transparent);
+  }
+
+  .hero__gumb--obroba:hover {
+    background: color-mix(in srgb, var(--podlaga) 14%, transparent);
+    box-shadow: inset 0 0 0 1px var(--podlaga);
+  }
+
+  .hero :focus-visible {
+    outline-color: var(--zarenje);
+  }
+
+  .hero__kazalnik {
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    bottom: 0.75rem;
+    translate: -50% 0;
+    display: grid;
+    justify-items: center;
+    gap: 0.4rem;
+    min-width: 2.75rem;
+    padding: 0.5rem 0.75rem;
+    font-size: var(--fs-drobna);
+    letter-spacing: 0.02em;
+    color: color-mix(in srgb, var(--podlaga) 85%, transparent);
+    text-decoration: none;
+    border-radius: 0.375rem;
+  }
+
+  .hero__kazalnik-crta {
+    width: 1px;
+    height: 2rem;
+    background: linear-gradient(currentColor, transparent);
+  }
+
+  .hero__znacka {
+    position: absolute;
+    z-index: 1;
+    right: var(--rob-strani);
+    top: calc(var(--glava-visina) + 0.75rem);
+  }
+
+  @media (min-width: 56rem) {
+    .hero__medij :global(.hero__slika),
+    .hero__video {
+      object-position: var(--hero-fokus-d);
+    }
+
+    .hero__tema {
+      background:
+        linear-gradient(180deg, rgb(var(--temna) / 0.55) 0, rgb(var(--temna) / 0) 8rem),
+        linear-gradient(
+          90deg,
+          rgb(var(--temna) / 0.84) 0%,
+          rgb(var(--temna) / 0.62) 40%,
+          rgb(var(--temna) / 0.2) 72%,
+          rgb(var(--temna) / 0.08) 100%
+        ),
+        linear-gradient(0deg, rgb(var(--temna) / 0.6) 0%, rgb(var(--temna) / 0) 55%);
+    }
+
+    .hero__znacka {
+      top: auto;
+      bottom: 1.5rem;
+    }
+  }
+
+  /* Scrub način: zunanji prostor za pomikanje, prizor je pripet s CSS sticky (brez scroll hijackinga). */
+  :global(html.hero-scrub) .hero {
+    height: calc(var(--hero-razdalja-m) * 1vh);
+  }
+
+  /* Pripet prizor ima natanko višino vidnega dela zaslona (svh: tudi s prikazano naslovno vrstico). */
+  :global(html.hero-scrub) .hero__scena {
+    position: sticky;
+    top: 0;
+    min-height: 0;
+    height: 100vh;
+    height: 100svh;
+  }
+
+  :global(html.hero-scrub) .hero__meja {
+    height: 70%;
+  }
+
+  /* Zelo nizki zasloni (npr. 320 × 568): pripet prizor ne sme rezati naslova ali CTA. */
+  @media (max-height: 36rem) {
+    :global(html.hero-scrub) .hero__nadnaslov {
+      display: none;
+    }
+
+    :global(html.hero-scrub) .hero__vsebina {
+      gap: 0.75rem;
+      padding-bottom: 4.5rem;
+    }
+
+    :global(html.hero-scrub) .hero__povzetek {
+      font-size: var(--fs-osnova);
+      line-height: 1.5;
+    }
+
+    :global(html.hero-scrub) .hero__kazalnik-crta {
+      height: 1rem;
+    }
+  }
+
+  :global(html.hero-scrub) .hero__prehod {
+    height: 45%;
+    opacity: 0;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--podlaga) 0%, transparent) 0%,
+      color-mix(in srgb, var(--podlaga) 75%, transparent) 55%,
+      var(--podlaga) 100%
+    );
+  }
+
+  :global(html.hero-scrub) .hero.je-aktiven .hero__vsebina,
+  :global(html.hero-scrub) .hero.je-aktiven .hero__prehod {
+    will-change: opacity, transform;
+  }
+
+  @supports (height: 1svh) {
+    :global(html.hero-scrub) .hero {
+      height: calc(var(--hero-razdalja-m) * 1svh);
+    }
+  }
+
+  @media (min-width: 56rem) {
+    :global(html.hero-scrub) .hero {
+      height: calc(var(--hero-razdalja-d) * 1vh);
+    }
+
+    @supports (height: 1svh) {
+      :global(html.hero-scrub) .hero {
+        height: calc(var(--hero-razdalja-d) * 1svh);
+      }
+    }
+  }
+
+  /* Varovalka: omejeno gibanje nikoli ne dobi pripetja ali dodatne višine. */
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.hero-scrub) .hero {
+      height: auto;
+    }
+
+    :global(html.hero-scrub) .hero__scena {
+      position: relative;
+      height: auto;
+      min-height: 100svh;
+    }
+
+    .hero__video {
+      display: none;
+    }
+  }
+
+  /* Uvodni reveal: skrito le, dokler skript ne prevzame (varovalka v Osnova.astro). */
+  :global(html.uvod-caka) [data-uvod],
+  :global(html.uvod-caka) [data-uvod-vrstica] {
+    opacity: 0;
+  }
+</style>

@@ -176,7 +176,22 @@ main[id] {
   box-shadow: inset 0 0 0 1px var(--gozd);
 }
 
+/* Odziv gumbov: rahel dvig ob hoverju (samo natančen kazalec) in ob fokusu s tipkovnico */
 @media (prefers-reduced-motion: no-preference) {
+  .gumb:focus-visible {
+    transform: translateY(-2px);
+  }
+
+  .gumb:active {
+    transform: translateY(1px);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .gumb:hover {
+    transform: translateY(-2px);
+  }
+
   .gumb:active {
     transform: translateY(1px);
   }
@@ -270,6 +285,12 @@ main[id] {
   background:
     radial-gradient(50% 45% at 70% 30%, color-mix(in srgb, var(--zarenje) 16%, transparent), transparent 70%),
     var(--gozd-globok);
+}
+
+.atmosfera__kontakt {
+  background:
+    radial-gradient(60% 80% at 100% 100%, color-mix(in srgb, var(--glina) 18%, transparent), transparent 70%),
+    var(--podlaga);
 }
 
 html.ton-aktiven .atmosfera {

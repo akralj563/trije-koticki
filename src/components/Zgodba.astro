@@ -6,8 +6,8 @@ import { zgodba } from '../data/vsebina';
 <section id="zgodba" class="zgodba" aria-labelledby="zgodba-naslov">
   <div class="ovoj zgodba__mreza">
     <h2 id="zgodba-naslov" class="visually-hidden">Zgodba</h2>
-    <p class="zgodba__poudarek" data-razkrij>{zgodba.poudarek}</p>
-    <div class="zgodba__stolpec" data-razkrij>
+    <p class="zgodba__poudarek" data-razkrij="levo">{zgodba.poudarek}</p>
+    <div class="zgodba__stolpec" data-razkrij="desno">
       <Motiv vrsta="list" class="zgodba__list" />
       {zgodba.odstavki.map((o) => <p>{o}</p>)}
     </div>
