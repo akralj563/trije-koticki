@@ -1,0 +1,298 @@
+﻿---
+import { Image } from 'astro:assets';
+import Motiv from './Motiv.astro';
+import { koticki, slike } from '../data/vsebina';
+
+const [unikatni, zeliscni, energijski] = koticki;
+---
+
+<section id="koticki" class="koticki" aria-labelledby="koticki-naslov">
+  <div class="ovoj koticki__glava" data-razkrij>
+    <h2 id="koticki-naslov">Trije kotički</h2>
+    <p>Vsak s svojo zgodbo, a vsi povezani z isto željo.</p>
+  </div>
+
+  <div class="ovoj koticki__sklad">
+    <!-- Unikatni: tipografska kompozicija z linijo perl (fotografij nakita še ni) -->
+    <article class="plast plast--unikatni" data-plast aria-labelledby="plast-unikatni">
+      <div class="plast__notranje">
+        <div class="plast__besedilo">
+          <p class="plast__podnaslov">{unikatni.podnaslov}</p>
+          <h3 id="plast-unikatni">{unikatni.naslov}</h3>
+          <p class="plast__izjava">{unikatni.besedilo}</p>
+          <a class="povezava" href={`#${unikatni.id}`}>{unikatni.poziv}</a>
+        </div>
+        <div class="plast__perle" data-globina="-14" data-nagib>
+          <Motiv vrsta="perle" />
+        </div>
+      </div>
+      <div class="plast__senca" aria-hidden="true"></div>
+    </article>
+
+    <!-- Zeliščni: pokončna fotografija in izrez košare -->
+    <article class="plast plast--zeliscni" data-plast aria-labelledby="plast-zeliscni">
+      <div class="plast__notranje">
+        <div class="plast__foto" data-nagib>
+          <div class="okvir plast__foto-velika">
+            <Image src={slike.snopiMiza.src} alt={slike.snopiMiza.alt} widths={[325]} sizes="(min-width: 56rem) 22rem, 60vw" data-globina-slika />
+          </div>
+          <div class="okvir plast__foto-mala" data-globina="-18">
+            <Image src={slike.kosara.src} alt="" widths={[476]} sizes="10rem" style="object-position: 14% 84%; transform-origin: 14% 84%; transform: scale(2.2)" />
+          </div>
+        </div>
+        <div class="plast__besedilo">
+          <p class="plast__podnaslov">{zeliscni.podnaslov}</p>
+          <h3 id="plast-zeliscni">{zeliscni.naslov}</h3>
+          <p class="plast__opis">{zeliscni.besedilo}</p>
+          <a class="povezava" href={`#${zeliscni.id}`}>{zeliscni.poziv}</a>
+        </div>
+      </div>
+      <div class="plast__senca" aria-hidden="true"></div>
+    </article>
+
+    <!-- Energijski: svetloba in koncentrični krogi -->
+    <article class="plast plast--energijski" data-plast aria-labelledby="plast-energijski">
+      <div class="plast__notranje">
+        <div class="plast__krogi" aria-hidden="true">
+          <div data-globina="10"><Motiv vrsta="krogi" /></div>
+        </div>
+        <div class="plast__besedilo">
+          <p class="plast__podnaslov">{energijski.podnaslov}</p>
+          <h3 id="plast-energijski">{energijski.naslov}</h3>
+          <p class="plast__opis">{energijski.besedilo}</p>
+          <a class="povezava" href={`#${energijski.id}`}>{energijski.poziv}</a>
+        </div>
+      </div>
+      <div class="plast__senca" aria-hidden="true"></div>
+    </article>
+  </div>
+</section>
+
+<style>
+  .koticki {
+    padding-bottom: var(--prostor-sekcije);
+    background: var(--podlaga);
+  }
+
+  .koticki__glava {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+    padding-bottom: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+  }
+
+  .koticki__glava h2 {
+    font-size: var(--fs-h2);
+  }
+
+  .koticki__glava p {
+    font-family: var(--pisava-naslovi);
+    font-style: italic;
+    font-size: var(--fs-uvod);
+    color: var(--oliva-temna);
+  }
+
+  .koticki__sklad {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .plast {
+    position: relative;
+    overflow: hidden;
+    border-radius: clamp(1.25rem, 0.8rem + 1.5vw, 2.25rem);
+    min-height: 34rem;
+    transform-origin: 50% 0%;
+    isolation: isolate;
+  }
+
+  .plast__notranje {
+    position: relative;
+    height: 100%;
+    display: grid;
+    gap: 2.5rem;
+    padding: clamp(2rem, 1.25rem + 3vw, 4.5rem);
+    align-content: center;
+  }
+
+  .plast__senca {
+    position: absolute;
+    inset: 0;
+    background: var(--gozd-globok);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .plast__besedilo {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 1.1rem;
+    justify-items: start;
+    max-width: 34rem;
+  }
+
+  .plast h3 {
+    font-size: var(--fs-h2);
+    font-weight: 300;
+  }
+
+  .plast__podnaslov {
+    font-family: var(--pisava-naslovi);
+    font-style: italic;
+    font-size: var(--fs-uvod);
+  }
+
+  .plast__opis {
+    font-size: var(--fs-uvod);
+    max-width: 30rem;
+  }
+
+  .plast .povezava {
+    margin-top: 0.75rem;
+  }
+
+  /* Unikatni */
+  .plast--unikatni {
+    background:
+      radial-gradient(60% 70% at 85% 40%, color-mix(in srgb, var(--papir) 85%, transparent), transparent 70%),
+      linear-gradient(135deg, var(--pesek) 0%, #dcbfa8 100%);
+    color: var(--gozd);
+  }
+
+  .plast--unikatni .plast__podnaslov {
+    color: var(--glina-temna);
+  }
+
+  .plast__izjava {
+    font-family: var(--pisava-naslovi);
+    font-size: var(--fs-izjava);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    max-width: 14ch;
+    color: var(--glina-temna);
+  }
+
+  .plast__perle {
+    justify-self: center;
+    width: min(70%, 22rem);
+    color: var(--glina-temna);
+  }
+
+  /* Zeliščni */
+  .plast--zeliscni {
+    background:
+      radial-gradient(50% 60% at 15% 90%, color-mix(in srgb, var(--zarenje) 22%, transparent), transparent 70%),
+      #47513a;
+    color: var(--podlaga);
+  }
+
+  .plast--zeliscni .plast__podnaslov {
+    color: var(--zarenje);
+  }
+
+  .plast__foto {
+    position: relative;
+    justify-self: center;
+    width: min(62%, 20rem);
+  }
+
+  .plast__foto-velika {
+    aspect-ratio: 325 / 520;
+    border-radius: 0.75rem;
+    box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.55);
+  }
+
+  .plast__foto-velika img {
+    object-position: 50% 70%;
+    transform: scale(1.1);
+  }
+
+  .plast__foto-mala {
+    position: absolute;
+    right: -30%;
+    bottom: 12%;
+    width: 52%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 5px solid #47513a;
+  }
+
+  /* Energijski */
+  .plast--energijski {
+    background:
+      radial-gradient(45% 55% at 50% 50%, color-mix(in srgb, var(--zarenje) 28%, transparent), transparent 75%),
+      var(--gozd-globok);
+    color: var(--podlaga);
+  }
+
+  .plast--energijski .plast__notranje {
+    justify-items: center;
+    text-align: center;
+  }
+
+  .plast--energijski .plast__besedilo {
+    justify-items: center;
+  }
+
+  .plast--energijski .plast__podnaslov {
+    color: var(--zarenje);
+  }
+
+  .plast__krogi {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: min(120%, 44rem);
+    translate: -50% -50%;
+    color: var(--zarenje);
+    opacity: 0.7;
+  }
+
+  @media (min-width: 56rem) {
+    .plast {
+      height: calc(100svh - var(--glava-visina) - 3rem);
+      min-height: 36rem;
+      max-height: 54rem;
+    }
+
+    .plast__notranje {
+      grid-template-columns: 1.2fr 1fr;
+      align-items: center;
+    }
+
+    .plast--zeliscni .plast__notranje {
+      grid-template-columns: 1fr 1.15fr;
+    }
+
+    .plast--energijski .plast__notranje {
+      grid-template-columns: 1fr;
+    }
+
+    .plast__perle {
+      width: min(100%, 26rem);
+    }
+
+    .plast__foto {
+      width: min(70%, 21rem);
+    }
+  }
+
+  /* Plasti se prekrivajo (pripete) samo na namizju in brez omejenega gibanja */
+  @media (min-width: 56rem) and (prefers-reduced-motion: no-preference) {
+    .koticki__sklad {
+      gap: 0;
+    }
+
+    .plast {
+      position: sticky;
+      top: calc(var(--glava-visina) + 1rem);
+    }
+
+    .plast + .plast {
+      margin-top: 18vh;
+    }
+  }
+</style>

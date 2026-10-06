@@ -1,0 +1,34 @@
+---
+import Osnova from '../layouts/Osnova.astro';
+import Glava from '../components/Glava.astro';
+import Uvod from '../components/Uvod.astro';
+import Zgodba from '../components/Zgodba.astro';
+import Koticki from '../components/Koticki.astro';
+import Nakit from '../components/Nakit.astro';
+import Zelisca from '../components/Zelisca.astro';
+import Snopi from '../components/Snopi.astro';
+import Energija from '../components/Energija.astro';
+import Zakljucek from '../components/Zakljucek.astro';
+import { znamka } from '../data/vsebina';
+---
+
+<Osnova
+  naslov={`${znamka.ime} — nakit, zelišča in energijska podpora`}
+  opis="Unikatni nakit, sušena zelišča in snopi ter energijske storitve. Lokalni prototip."
+>
+  <Glava />
+  <main id="vsebina">
+    <Uvod />
+    <Zgodba />
+    <Koticki />
+    <Nakit />
+    <Zelisca />
+    <Snopi />
+    <Energija />
+  </main>
+  <Zakljucek />
+</Osnova>
+
+<script>
+  import '../scripts/gibanje';
+</script>

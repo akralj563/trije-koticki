@@ -1,0 +1,159 @@
+---
+import { Image } from 'astro:assets';
+import Motiv from './Motiv.astro';
+import { snopi } from '../data/vsebina';
+
+// Različna razmerja ustvarijo ritem; vse slike so začasne reference iz OSNOVA.docx.
+const razmerja = ['4 / 5', '3 / 5', '1 / 1'];
+---
+
+<section id="snopi" class="snopi" data-ton="zelisca" aria-labelledby="snopi-naslov">
+  <div class="ovoj">
+    <div class="snopi__glava" data-razkrij>
+      <h2 id="snopi-naslov">{snopi.naslov}</h2>
+      <p>{snopi.besedilo}</p>
+      <Motiv vrsta="vejica" class="snopi__vejica" />
+    </div>
+
+    <ul class="snopi__mreza" data-stagger>
+      {snopi.izdelki.map((s, i) => (
+        <li class="snop">
+          <figure>
+            <div class="okvir snop__foto" style={`aspect-ratio: ${razmerja[i]}`} data-nagib>
+              <Image
+                src={s.slika.src}
+                alt={s.slika.alt}
+                widths={[Math.min(s.slika.src.width, 690)]}
+                sizes="(min-width: 56rem) 28vw, 90vw"
+                style={`object-position: ${s.slika.pozicija}`}
+              />
+            </div>
+            <figcaption class="snop__opis">
+              <h3>{s.ime}</h3>
+              <p class="snop__oblika">{s.oblika}</p>
+              <p>{s.opis}</p>
+              <p class="snop__cena">
+                <span>{s.mera}</span>
+                <strong>{s.cena}</strong>
+              </p>
+            </figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .snopi {
+    padding-block: clamp(3rem, 2rem + 4vw, 6rem) var(--prostor-sekcije);
+    background: var(--zajbelj);
+  }
+
+  .snopi__glava {
+    position: relative;
+    display: grid;
+    gap: 1rem;
+    max-width: 40rem;
+    margin-bottom: clamp(3rem, 2rem + 4vw, 6rem);
+  }
+
+  .snopi h2 {
+    font-size: var(--fs-h2);
+    font-weight: 300;
+  }
+
+  .snopi__glava p {
+    color: var(--besedilo-mehko);
+    font-size: var(--fs-uvod);
+    max-width: 32rem;
+  }
+
+  .snopi__glava :global(.snopi__vejica) {
+    position: absolute;
+    right: -6rem;
+    top: -2rem;
+    width: 5rem;
+    color: var(--oliva);
+    opacity: 0.6;
+    transform: rotate(18deg);
+  }
+
+  .snopi__mreza {
+    display: grid;
+    gap: 3.5rem;
+  }
+
+  figure {
+    margin: 0;
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .snop__foto {
+    border-radius: 0.75rem;
+    box-shadow: 0 30px 60px -36px color-mix(in srgb, var(--gozd) 60%, transparent);
+  }
+
+  .snop__opis {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .snop h3 {
+    font-size: var(--fs-h3);
+    font-weight: 350;
+  }
+
+  .snop__oblika {
+    font-family: var(--pisava-naslovi);
+    font-style: italic;
+    color: var(--oliva-temna);
+  }
+
+  .snop__opis p:not([class]) {
+    color: var(--besedilo-mehko);
+    max-width: 24rem;
+  }
+
+  .snop__cena {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-top: 0.4rem;
+    font-size: var(--fs-majhna);
+  }
+
+  .snop__cena span {
+    color: var(--besedilo-mehko);
+  }
+
+  .snop__cena strong {
+    font-family: var(--pisava-naslovi);
+    font-weight: 400;
+    font-size: 1.4rem;
+  }
+
+  @media (max-width: 55.99rem) {
+    /* Na telefonu enaka, umirjena razmerja */
+    .snop__foto {
+      aspect-ratio: 4 / 3 !important;
+    }
+  }
+
+  @media (min-width: 56rem) {
+    .snopi__mreza {
+      grid-template-columns: 1.1fr 0.9fr 1fr;
+      gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+      align-items: start;
+    }
+
+    .snop:nth-child(2) {
+      margin-top: 8rem;
+    }
+
+    .snop:nth-child(3) {
+      margin-top: 3rem;
+    }
+  }
+</style>

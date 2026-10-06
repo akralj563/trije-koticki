@@ -1,0 +1,4 @@
+# PROTOTIP: indeksiranje je onemogočeno.
+# Pred končno objavo pregledaj to datoteko in meta robots (glej docs/NAPREDEK.md).
+User-agent: *
+Disallow: /

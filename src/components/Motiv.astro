@@ -1,0 +1,89 @@
+---
+// Lastni linijski motivi (dekoracija, ne prikaz izdelkov).
+interface Props {
+  vrsta: 'vejica' | 'cvet' | 'perle' | 'krogi' | 'list';
+  class?: string;
+}
+const { vrsta, class: razred } = Astro.props;
+
+const perle = Array.from({ length: 28 }, (_, i) => {
+  const kot = (i / 28) * Math.PI * 2 - Math.PI / 2;
+  const r = 92 + Math.sin(i * 1.7) * 3;
+  return { x: 120 + Math.cos(kot) * r, y: 128 + Math.sin(kot) * r, r: i % 4 === 0 ? 7 : 4.2 };
+});
+
+// Kobul (rmanu podoben cvet): drobni cvetki na pecljih
+const kobul = Array.from({ length: 13 }, (_, i) => {
+  const kot = -Math.PI + (i / 12) * Math.PI;
+  const d = 34 + (i % 3) * 8;
+  return { x: 60 + Math.cos(kot) * d, y: 48 + Math.sin(kot) * d * 0.55 };
+});
+---
+
+<svg
+  class:list={['motiv', razred]}
+  viewBox={vrsta === 'perle' ? '0 0 240 256' : vrsta === 'krogi' ? '0 0 400 400' : '0 0 120 160'}
+  aria-hidden="true"
+  focusable="false"
+>
+  {vrsta === 'vejica' && (
+    <g fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M58 158 C60 120 62 70 70 6" />
+      <path d="M59 134 C42 132 30 120 26 104 C42 106 54 118 59 134 Z" />
+      <path d="M60 116 C78 110 90 98 94 82 C78 84 66 96 60 116 Z" />
+      <path d="M62 92 C46 88 36 76 34 60 C50 64 60 76 62 92 Z" />
+      <path d="M64 70 C80 64 88 52 90 38 C76 42 66 54 64 70 Z" />
+      <path d="M66 48 C54 42 48 32 48 20 C60 26 66 36 66 48 Z" />
+      <path d="M68 28 C74 22 78 14 78 8 C72 12 68 20 68 28 Z" />
+      <path d="M59 134 L38 112 M60 116 L84 92 M62 92 L44 70 M64 70 L82 48" opacity="0.5" />
+    </g>
+  )}
+  {vrsta === 'cvet' && (
+    <g fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round">
+      <path d="M60 158 C61 120 60 90 60 52" />
+      {kobul.map((c) => (
+        <>
+          <path d={`M60 52 Q${(60 + c.x) / 2} ${c.y + 14} ${c.x} ${c.y}`} opacity="0.7" />
+          <circle cx={c.x} cy={c.y} r="3.2" />
+        </>
+      ))}
+      <path d="M60 118 C48 112 40 104 36 94 M60 118 C50 108 46 100 46 92" opacity="0.6" />
+      <path d="M60 100 C72 96 80 88 84 78 M60 100 C70 92 74 86 74 78" opacity="0.6" />
+    </g>
+  )}
+  {vrsta === 'list' && (
+    <g fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M60 154 C58 120 40 90 44 50 C48 22 62 8 66 6 C74 30 84 60 78 96 C74 124 64 140 60 154 Z" />
+      <path d="M60 154 C62 110 64 60 66 6" />
+      <path d="M61 130 L48 112 M62 108 L48 86 M63 86 L50 62 M64 64 L54 40 M62 118 L74 98 M63 96 L77 74 M64 74 L76 50" opacity="0.5" />
+    </g>
+  )}
+  {vrsta === 'perle' && (
+    <g>
+      <circle cx="120" cy="128" r="92" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.45" />
+      {perle.map((p) => (
+        <circle cx={p.x} cy={p.y} r={p.r} fill="none" stroke="currentColor" stroke-width="1.1" />
+      ))}
+      <path d="M120 36 v-22 M110 14 h20" stroke="currentColor" stroke-width="1.1" fill="none" stroke-linecap="round" />
+      <circle cx="120" cy="128" r="58" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.3" stroke-dasharray="1 6" stroke-linecap="round" />
+    </g>
+  )}
+  {vrsta === 'krogi' && (
+    <g fill="none" stroke="currentColor">
+      <circle cx="200" cy="200" r="14" stroke-width="1" />
+      <circle cx="200" cy="200" r="44" stroke-width="0.9" opacity="0.8" />
+      <circle cx="200" cy="200" r="80" stroke-width="0.8" opacity="0.6" stroke-dasharray="2 7" stroke-linecap="round" />
+      <circle cx="200" cy="200" r="120" stroke-width="0.7" opacity="0.45" />
+      <circle cx="200" cy="200" r="160" stroke-width="0.6" opacity="0.3" stroke-dasharray="1 9" stroke-linecap="round" />
+      <circle cx="200" cy="200" r="196" stroke-width="0.5" opacity="0.18" />
+    </g>
+  )}
+</svg>
+
+<style>
+  .motiv {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+</style>

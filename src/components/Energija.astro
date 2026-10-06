@@ -1,0 +1,140 @@
+﻿---
+import Motiv from './Motiv.astro';
+import { energija } from '../data/vsebina';
+// Opisi, trajanje in cene storitev še niso prejeti; seznam vodi do povpraševanja.
+---
+
+<section id="energijski" class="energija" data-ton="energija" data-temno aria-labelledby="energija-naslov">
+  <div class="energija__svetloba" aria-hidden="true">
+    <div class="energija__krogi" data-globina="16"><Motiv vrsta="krogi" /></div>
+  </div>
+  <div class="ovoj energija__mreza">
+    <div class="energija__glava" data-razkrij>
+      <p class="nadnaslov">Energijski kotiček</p>
+      <h2 id="energija-naslov">{energija.podnaslov}</h2>
+    </div>
+    <ul class="energija__storitve" data-stagger aria-label="Storitve">
+      {energija.storitve.map((s) => (
+        <li>
+          <a href="#kontakt">
+            <span class="energija__ime">{s}</span>
+            <span class="energija__vprasaj">Povprašaj</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .energija {
+    position: relative;
+    padding-block: var(--prostor-sekcije);
+    background:
+      radial-gradient(50% 45% at 70% 30%, color-mix(in srgb, var(--zarenje) 16%, transparent), transparent 70%),
+      var(--gozd-globok);
+    color: var(--podlaga);
+    overflow: clip;
+  }
+
+  .energija__svetloba {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .energija__krogi {
+    position: absolute;
+    top: 8%;
+    right: -18rem;
+    width: 46rem;
+    color: var(--zarenje);
+    opacity: 0.35;
+  }
+
+  .energija__mreza {
+    position: relative;
+    display: grid;
+    gap: clamp(3rem, 2rem + 4vw, 6rem);
+  }
+
+  .energija__glava {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .energija .nadnaslov {
+    color: var(--zarenje);
+  }
+
+  .energija h2 {
+    font-size: var(--fs-h2);
+    font-weight: 300;
+    max-width: 14ch;
+  }
+
+  .energija__storitve {
+    display: grid;
+  }
+
+  .energija__storitve a {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: clamp(1.1rem, 0.8rem + 1vw, 1.75rem);
+    border-top: 1px solid color-mix(in srgb, var(--podlaga) 22%, transparent);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .energija__storitve li:last-child a {
+    border-bottom: 1px solid color-mix(in srgb, var(--podlaga) 22%, transparent);
+  }
+
+  .energija__ime {
+    font-family: var(--pisava-naslovi);
+    font-weight: 300;
+    font-size: var(--fs-izjava);
+    line-height: 1.1;
+    transition: transform var(--mehko), color var(--hitro);
+  }
+
+  .energija__vprasaj {
+    flex-shrink: 0;
+    font-size: var(--fs-majhna);
+    color: color-mix(in srgb, var(--podlaga) 70%, transparent);
+    transition: color var(--hitro);
+  }
+
+  .energija__storitve a:hover .energija__ime,
+  .energija__storitve a:focus-visible .energija__ime {
+    color: var(--zarenje);
+  }
+
+  .energija__storitve a:hover .energija__vprasaj {
+    color: var(--podlaga);
+  }
+
+  .energija :focus-visible {
+    outline-color: var(--zarenje);
+  }
+
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .energija__storitve a:hover .energija__ime {
+      transform: translateX(0.75rem);
+    }
+  }
+
+  @media (min-width: 56rem) {
+    .energija__mreza {
+      grid-template-columns: 5fr 7fr;
+      align-items: start;
+    }
+
+    .energija__glava {
+      position: sticky;
+      top: calc(var(--glava-visina) + 2rem);
+    }
+  }
+</style>

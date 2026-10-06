@@ -1,0 +1,47 @@
+---
+import '@fontsource-variable/newsreader/opsz.css';
+import '@fontsource-variable/newsreader/opsz-italic.css';
+import '@fontsource-variable/figtree/wght.css';
+import '../styles/global.css';
+
+interface Props {
+  naslov: string;
+  opis: string;
+}
+const { naslov, opis } = Astro.props;
+---
+
+<!doctype html>
+<html lang="sl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- PROTOTIP: indeksiranje je onemogočeno. Pred objavo pregledaj (glej docs/NAPREDEK.md). -->
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="description" content={opis} />
+    <meta name="theme-color" content="#F5F0E6" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{naslov}</title>
+    <script is:inline>
+      // Oznaka za JS. Uvodni reveal počaka na skript samo, če gibanje ni omejeno;
+      // varovalka po 2,5 s vsebino vedno prikaže, tudi če skript ne naloži.
+      (function () {
+        var h = document.documentElement;
+        h.classList.add('js');
+        if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+          h.classList.add('uvod-caka');
+          setTimeout(function () { h.classList.remove('uvod-caka'); }, 2500);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="preskok" href="#vsebina">Preskoči na vsebino</a>
+    <div class="atmosfera" aria-hidden="true">
+      <div class="atmosfera__nakit"></div>
+      <div class="atmosfera__zelisca"></div>
+      <div class="atmosfera__energija"></div>
+    </div>
+    <slot />
+  </body>
+</html>

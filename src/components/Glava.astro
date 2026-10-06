@@ -1,0 +1,352 @@
+---
+import { navigacija, znamka } from '../data/vsebina';
+---
+
+<header class="glava" data-glava>
+  <div class="glava__notranje">
+    <!-- DELOVNO IME »Trije kotički« — zamenjaj po potrditvi imena znamke. -->
+    <a class="glava__znamka" href="#vrh">
+      <span class="glava__ime">{znamka.ime}</span>
+      <span class="glava__opis">{znamka.opis}</span>
+    </a>
+
+    <button class="glava__gumb" type="button" aria-expanded="false" aria-controls="glavni-meni">
+      <span class="glava__ikona" aria-hidden="true"></span>
+      <span class="glava__gumb-besedilo">Meni</span>
+    </button>
+
+    <nav id="glavni-meni" class="glava__meni" aria-label="Glavna navigacija">
+      <ul>
+        {navigacija.map((p) => (
+          <li><a href={p.href}>{p.oznaka}</a></li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // Meni in stanje glave. Varovalka prepreči podvojene poslušalce ob ponovni inicializaciji.
+  type Okno = Window & { __glavaPocisti?: () => void };
+
+  function zazeni() {
+    const w = window as Okno;
+    w.__glavaPocisti?.();
+
+    const glava = document.querySelector<HTMLElement>('[data-glava]');
+    const gumb = glava?.querySelector<HTMLButtonElement>('.glava__gumb');
+    const meni = document.getElementById('glavni-meni');
+    if (!glava || !gumb || !meni) return;
+
+    const besedilo = gumb.querySelector('.glava__gumb-besedilo');
+    const nadzor = new AbortController();
+    const { signal } = nadzor;
+
+    const nastavi = (odprt: boolean) => {
+      gumb.setAttribute('aria-expanded', String(odprt));
+      meni.classList.toggle('je-odprt', odprt);
+      glava.classList.toggle('ima-meni', odprt);
+      document.body.classList.toggle('meni-odprt', odprt);
+      if (besedilo) besedilo.textContent = odprt ? 'Zapri' : 'Meni';
+    };
+
+    gumb.addEventListener('click', () => nastavi(gumb.getAttribute('aria-expanded') !== 'true'), { signal });
+    meni.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) nastavi(false);
+    }, { signal });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && gumb.getAttribute('aria-expanded') === 'true') {
+        nastavi(false);
+        gumb.focus();
+      }
+    }, { signal });
+
+    const siroko = window.matchMedia('(min-width: 56rem)');
+    const obSirini = (e: MediaQueryListEvent) => e.matches && nastavi(false);
+    siroko.addEventListener('change', obSirini);
+
+    // Glava postane polprosojna, ko stran zapusti vrh, in temna nad temnimi sekcijami.
+    const temne = Array.from(document.querySelectorAll<HTMLElement>('[data-temno]'));
+    const posodobi = () => {
+      glava.classList.toggle('je-pomaknjena', window.scrollY > 24);
+      const sredina = glava.offsetHeight / 2;
+      glava.classList.toggle(
+        'na-temnem',
+        temne.some((el) => {
+          const r = el.getBoundingClientRect();
+          return r.top <= sredina && r.bottom >= sredina;
+        }),
+      );
+    };
+    posodobi();
+    window.addEventListener('scroll', posodobi, { passive: true, signal });
+
+    w.__glavaPocisti = () => {
+      nadzor.abort();
+      siroko.removeEventListener('change', obSirini);
+      nastavi(false);
+    };
+  }
+
+  zazeni();
+  document.addEventListener('astro:page-load', zazeni);
+</script>
+
+<style>
+  .glava {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 30;
+    color: var(--gozd);
+    transition:
+      background-color var(--mehko),
+      box-shadow var(--mehko);
+  }
+
+  .glava::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: color-mix(in srgb, var(--podlaga) 72%, transparent);
+    backdrop-filter: blur(14px) saturate(1.1);
+    -webkit-backdrop-filter: blur(14px) saturate(1.1);
+    box-shadow: 0 1px 0 var(--rob);
+    opacity: 0;
+    transition: opacity var(--mehko);
+  }
+
+  .glava.je-pomaknjena::before,
+  .glava.ima-meni::before {
+    opacity: 1;
+  }
+
+  .glava.na-temnem:not(.ima-meni) {
+    color: var(--podlaga);
+  }
+
+  .glava.na-temnem:not(.ima-meni)::before {
+    background: color-mix(in srgb, var(--gozd-globok) 70%, transparent);
+    box-shadow: 0 1px 0 color-mix(in srgb, var(--podlaga) 12%, transparent);
+  }
+
+  .glava.na-temnem:not(.ima-meni) .glava__opis {
+    color: color-mix(in srgb, var(--podlaga) 72%, transparent);
+  }
+
+  .glava.na-temnem:not(.ima-meni) .glava__gumb {
+    background: transparent;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--podlaga) 40%, transparent);
+  }
+
+  .glava.na-temnem :focus-visible {
+    outline-color: var(--zarenje);
+  }
+
+  .glava__notranje {
+    max-width: var(--sirina);
+    min-height: var(--glava-visina);
+    margin-inline: auto;
+    padding: 0.6rem var(--rob-strani);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    transition: min-height var(--mehko);
+  }
+
+  .glava__znamka {
+    display: grid;
+    gap: 0.1rem;
+    text-decoration: none;
+    border-radius: 0.375rem;
+    line-height: 1;
+  }
+
+  .glava__ime {
+    font-family: var(--pisava-naslovi);
+    font-size: 1.55rem;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  .glava__opis {
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--besedilo-mehko);
+  }
+
+  .glava__gumb {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    min-height: 2.75rem;
+    padding: 0 1rem;
+    font: inherit;
+    font-size: var(--fs-majhna);
+    font-weight: 500;
+    color: inherit;
+    background: color-mix(in srgb, var(--papir) 60%, transparent);
+    border: 0;
+    box-shadow: inset 0 0 0 1px var(--rob-mocan);
+    border-radius: 999px;
+    cursor: pointer;
+  }
+
+  .glava__ikona,
+  .glava__ikona::before {
+    display: block;
+    width: 1.1rem;
+    height: 1.5px;
+    background: currentColor;
+    transition: transform var(--hitro);
+  }
+
+  .glava__ikona {
+    position: relative;
+    transform: translateY(-3px);
+  }
+
+  .glava__ikona::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+  }
+
+  .glava__gumb[aria-expanded='true'] .glava__ikona {
+    transform: translateY(0) rotate(45deg);
+  }
+
+  .glava__gumb[aria-expanded='true'] .glava__ikona::before {
+    transform: translateY(-6px) rotate(-90deg);
+  }
+
+  /* Mobilni meni: celozaslonska plošča pod glavo */
+  .glava__meni {
+    position: fixed;
+    inset: var(--glava-visina) 0 0 0;
+    padding: 2rem var(--rob-strani) 3rem;
+    background:
+      radial-gradient(70% 50% at 90% 100%, color-mix(in srgb, var(--oliva) 20%, transparent), transparent 70%),
+      var(--podlaga);
+    overflow-y: auto;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-0.75rem);
+    transition:
+      opacity var(--hitro),
+      transform var(--hitro),
+      visibility 0s linear 0.25s;
+  }
+
+  .glava__meni.je-odprt {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity var(--hitro),
+      transform var(--hitro);
+  }
+
+  .glava__meni a {
+    display: block;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--rob);
+    text-decoration: none;
+    font-family: var(--pisava-naslovi);
+    font-size: clamp(2rem, 1.4rem + 3vw, 2.6rem);
+    line-height: 1.1;
+  }
+
+  :global(body.meni-odprt) {
+    overflow: hidden;
+  }
+
+  /* Brez JavaScripta ostane meni viden kot preprost seznam */
+  :global(html:not(.js)) .glava {
+    position: absolute;
+  }
+
+  :global(html:not(.js)) .glava__gumb {
+    display: none;
+  }
+
+  :global(html:not(.js)) .glava__notranje {
+    flex-wrap: wrap;
+  }
+
+  :global(html:not(.js)) .glava__meni {
+    position: static;
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    flex-basis: 100%;
+    padding: 0;
+    background: none;
+  }
+
+  :global(html:not(.js)) .glava__meni ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1rem;
+  }
+
+  :global(html:not(.js)) .glava__meni a {
+    font-size: var(--fs-majhna);
+    font-family: var(--pisava-besedilo);
+    border: 0;
+    padding: 0.25rem 0;
+  }
+
+  @media (min-width: 56rem) {
+    .glava.je-pomaknjena .glava__notranje {
+      min-height: 3.75rem;
+    }
+
+    .glava__gumb {
+      display: none;
+    }
+
+    .glava__meni {
+      position: static;
+      visibility: visible;
+      opacity: 1;
+      transform: none;
+      background: none;
+      padding: 0;
+      overflow: visible;
+      transition: none;
+    }
+
+    .glava__meni ul {
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .glava__meni a {
+      position: relative;
+      padding: 0.55rem 0.9rem;
+      border: 0;
+      font-family: var(--pisava-besedilo);
+      font-size: var(--fs-majhna);
+      font-weight: 500;
+    }
+
+    .glava__meni a::after {
+      content: '';
+      position: absolute;
+      left: 0.9rem;
+      right: 0.9rem;
+      bottom: 0.3rem;
+      height: 1px;
+      background: currentColor;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--hitro);
+    }
+
+    .glava__meni a:hover::after {
+      transform: scaleX(1);
+    }
+  }
+</style>

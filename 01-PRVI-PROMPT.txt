@@ -1,0 +1,43 @@
+Delava prvo fazo nove spletne strani za naročnico.
+
+Preberi CLAUDE.md in datoteke v docs. Zahteve stranke, predlogi oblikovanja
+in manjkajoči podatki so v njih ločeni. Dokumenti so delovno gradivo in
+ne smejo postati javno dostopne datoteke spletne strani.
+
+Za zdaj je cilj delujoč lokalni prototip domače strani.
+Pred začetkom preveri mapo ter Node/npm in zahteve Astro.
+Če je okolje pripravljeno, inicializiraj minimalen Astro projekt
+v korenu te mape, pri tem ohrani obstoječa navodila in docs.
+Uporabi TypeScript in navaden CSS s spremenljivkami. Če je za uradno
+inicializacijo potrebna prazna mapa, uporabi začasno podmapo in
+varno prenesi potrebne projektne datoteke brez prepisovanja dokumentacije.
+
+Izdelaj:
+- glavo in mobilno navigacijo;
+- uvodni del z besedilom na podlagi gradiva;
+- tri predstavitvene bloke za Unikatni, Zeliščni in Energijski kotiček;
+- kratko predstavitev ustvarjalnega pristopa;
+- kontaktno sekcijo in nogo.
+
+Sledi predlagani mirni vizualni smeri. Uporabi frontend-design, če je
+dosegljiv. Imena, kontaktov in biografije ne izmišljaj. Manjkajoča mesta
+jasno označi kot delovno vsebino samo v tem lokalnem prototipu.
+Nakit še nima dejanskih fotografij ali cen; ne ustvarjaj lažnega kataloga.
+Začasni vizual naj bo preprosta lastna dekoracija, ne fotografija
+izdelka, ki ga stranka nima. Slik iz Worda ne kopiraj na stran.
+
+Navigacija mora delovati; v tej fazi lahko vodi na sekcije domače strani.
+Ne dodajaj košarice, plačil, računov, CMS, pravega 3D ali Lenisa.
+Izvedi samo lahke CSS prehode in upoštevaj reduced motion.
+Med razvojem onemogoči indeksiranje prototipa; zabeleži, da je treba
+to pred končno objavo pregledati. Produkcijske domene še ne nastavljaj.
+
+Zaženi lokalni strežnik. Če je Chrome DevTools MCP dosegljiv,
+preveri stran pri 390 px in 1440 px, konzolo, meni in povezave.
+Če ni, mi povej, kaj moram pregledati sam. Odsotnost MCP-ja ne sme
+preprečiti izdelave in zagona osnovne strani.
+
+Zaženi produkcijski build ter odpravi napake v svoji izvedbi.
+Ustvari docs/NAPREDEK.md z narejenim, odprtimi podatki in naslednjo fazo.
+Na koncu napiši lokalni URL, rezultate preverjanja in točen naslednji korak.
+Ta faza je lokalna priprava za pregled; objava pride pozneje.

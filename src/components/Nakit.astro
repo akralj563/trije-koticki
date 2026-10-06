@@ -1,0 +1,215 @@
+﻿---
+import Motiv from './Motiv.astro';
+import { nakit } from '../data/vsebina';
+// Vizualni uvod v nakit. Imena, materiali in cene kosov še niso prejeti, zato jih ne prikazujemo.
+---
+
+<section id="unikatni" class="nakit" data-ton="nakit" aria-labelledby="nakit-naslov">
+  <div class="ovoj">
+    <div class="nakit__vrh">
+      <div class="nakit__glava" data-razkrij>
+        <p class="nadnaslov">Unikatni kotiček</p>
+        <h2 id="nakit-naslov">
+          <span>{nakit.majhen[0]}</span>
+          <span class="nakit__drugi">{nakit.majhen[1]}</span>
+        </h2>
+      </div>
+      <ul class="nakit__pomeni" data-stagger>
+        {nakit.pomeni.map((p) => <li>{p}</li>)}
+        <li class="nakit__pomeni-konec">{nakit.pomeniKonec}</li>
+      </ul>
+    </div>
+
+    <div class="nakit__sredina">
+      <div class="nakit__besedilo" data-razkrij>
+        {nakit.odstavki.map((o) => <p>{o}</p>)}
+      </div>
+      <ul class="nakit__namere" data-stagger>
+        {nakit.namere.map((n) => <li>{n}</li>)}
+      </ul>
+    </div>
+
+    <div class="nakit__sepet">
+      <div class="nakit__obroc" aria-hidden="true">
+        <div data-globina="-10"><Motiv vrsta="perle" /></div>
+      </div>
+      <p class="nakit__sepet-uvod" data-razkrij>Ali pa želite samo nekaj, kar bo vsak dan tiho šepetalo:</p>
+      <p class="nakit__sepet-glas" data-razkrij>{nakit.sepet}</p>
+      <p class="nakit__sklep" data-razkrij>
+        {nakit.sklep[0]} <em>{nakit.sklep[1]}</em>
+      </p>
+      <a class="gumb" href="#kontakt" data-razkrij>Vprašaj o nakitu</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .nakit {
+    position: relative;
+    padding-block: var(--prostor-sekcije) clamp(3rem, 2rem + 4vw, 6rem);
+    background: var(--pesek-svetel);
+    color: var(--gozd);
+  }
+
+  .nakit__vrh {
+    display: grid;
+    gap: 3rem;
+  }
+
+  .nakit__glava {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .nakit__glava .nadnaslov {
+    color: var(--glina-temna);
+  }
+
+  .nakit h2 {
+    font-size: var(--fs-h2);
+    font-weight: 300;
+  }
+
+  .nakit h2 span {
+    display: block;
+  }
+
+  .nakit__drugi {
+    padding-left: 1.2em;
+    font-style: italic;
+    color: var(--glina-temna);
+  }
+
+  .nakit__pomeni {
+    display: grid;
+    align-content: end;
+  }
+
+  .nakit__pomeni li {
+    padding-block: 0.85rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--glina) 35%, transparent);
+    font-family: var(--pisava-naslovi);
+    font-size: var(--fs-h3);
+    line-height: 1.2;
+  }
+
+  .nakit__pomeni li.nakit__pomeni-konec {
+    border: 0;
+    padding-top: 1.25rem;
+    font-family: var(--pisava-besedilo);
+    font-size: var(--fs-uvod);
+    color: var(--besedilo-mehko);
+  }
+
+  .nakit__sredina {
+    display: grid;
+    gap: 3rem;
+    margin-top: clamp(4rem, 3rem + 5vw, 8rem);
+  }
+
+  .nakit__besedilo {
+    display: grid;
+    gap: 1.1rem;
+    max-width: 32rem;
+    font-size: var(--fs-uvod);
+    color: var(--besedilo-mehko);
+  }
+
+  .nakit__besedilo p:first-child {
+    font-family: var(--pisava-naslovi);
+    font-size: var(--fs-h3);
+    line-height: 1.25;
+    color: var(--gozd);
+  }
+
+  .nakit__namere {
+    display: grid;
+    gap: 0.25rem;
+    align-content: center;
+  }
+
+  .nakit__namere li {
+    font-family: var(--pisava-naslovi);
+    font-style: italic;
+    font-weight: 300;
+    font-size: var(--fs-izjava);
+    line-height: 1.1;
+    color: var(--glina-temna);
+  }
+
+  .nakit__namere li:nth-child(2) {
+    padding-left: 1.5em;
+  }
+
+  .nakit__namere li:nth-child(3) {
+    padding-left: 3em;
+  }
+
+  .nakit__sepet {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 1.25rem;
+    margin-top: clamp(5rem, 3rem + 7vw, 10rem);
+    padding-top: clamp(3rem, 2rem + 4vw, 6rem);
+    text-align: center;
+  }
+
+  .nakit__obroc {
+    position: absolute;
+    /* Obroč obkroža šepet; besedilo pod njim ostane na čisti podlagi */
+    inset: 0 auto auto 50%;
+    width: min(96vw, 40rem);
+    translate: -50% -14%;
+    color: var(--glina);
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  .nakit__sepet > p,
+  .nakit__sepet > a {
+    position: relative;
+  }
+
+  .nakit__sepet-uvod {
+    font-size: var(--fs-uvod);
+    color: var(--besedilo-mehko);
+  }
+
+  .nakit__sepet-glas {
+    font-family: var(--pisava-naslovi);
+    font-weight: 300;
+    font-style: italic;
+    font-size: var(--fs-h1);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--glina-temna);
+  }
+
+  .nakit__sklep {
+    font-family: var(--pisava-naslovi);
+    font-size: var(--fs-h3);
+    max-width: 30ch;
+    margin-bottom: 1rem;
+  }
+
+  .nakit__sklep em {
+    display: block;
+    color: var(--oliva-temna);
+  }
+
+  @media (min-width: 56rem) {
+    .nakit__vrh {
+      grid-template-columns: 7fr 5fr;
+      align-items: end;
+      gap: 4rem;
+    }
+
+    .nakit__sredina {
+      grid-template-columns: 5fr 6fr;
+      gap: 4rem;
+      align-items: center;
+      padding-left: 8%;
+    }
+  }
+</style>

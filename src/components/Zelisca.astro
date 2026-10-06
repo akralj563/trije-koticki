@@ -1,0 +1,237 @@
+﻿---
+import { Image } from 'astro:assets';
+import Motiv from './Motiv.astro';
+import { zelisca } from '../data/vsebina';
+
+// Zelišča brez ustrezne fotografije dobijo linijski motiv, ne tuje slike.
+const motivi = ['vejica', 'list', 'cvet'] as const;
+let m = 0;
+const izbor = zelisca.izbor.map((z) => ({ ...z, motiv: z.slika ? null : motivi[m++ % motivi.length] }));
+---
+
+<section id="zeliscni" class="zelisca" data-ton="zelisca" aria-labelledby="zelisca-naslov">
+  <div class="ovoj zelisca__mreza">
+    <div class="zelisca__uvod" data-razkrij>
+      <p class="nadnaslov">Zeliščni kotiček</p>
+      <h2 id="zelisca-naslov">Izbrano iz zeliščnega kotička</h2>
+      <p class="zelisca__besedilo">{zelisca.uvod}</p>
+      <p class="zelisca__besedilo zelisca__besedilo--mehko">{zelisca.besedilo}</p>
+      <div class="zelisca__vsa">
+        <p>Vsa sušena zelišča v ponudbi</p>
+        <ul>
+          {zelisca.vsa.map((z) => <li>{z}</li>)}
+        </ul>
+      </div>
+    </div>
+
+    <ul class="zelisca__seznam" data-stagger aria-label="Izbor sušenih zelišč">
+      {izbor.map((z) => (
+        <li class:list={['zelisce', { 'zelisce--foto': z.slika }]}>
+          <div class="zelisce__vizual">
+            {z.slika ? (
+              <div class="okvir zelisce__foto">
+                <Image src={z.slika.src} alt={z.slika.alt} widths={[476]} sizes="7rem" style={`object-position: ${z.slika.pozicija}; transform-origin: ${z.slika.pozicija}; transform: scale(2.4)`} />
+              </div>
+            ) : (
+              <div class="zelisce__risba">{z.motiv && <Motiv vrsta={z.motiv} />}</div>
+            )}
+          </div>
+          <div class="zelisce__opis">
+            <h3>{z.ime}</h3>
+            <p class="zelisce__oznaka">{z.oznaka}</p>
+            <p>{z.opis}</p>
+          </div>
+          <p class="zelisce__cena">
+            <span>{z.kolicina}</span>
+            <strong>{z.cena}</strong>
+          </p>
+        </li>
+      ))}
+    </ul>
+  </div>
+  <p class="ovoj zelisca__opomba">{zelisca.opomba}</p>
+</section>
+
+<style>
+  .zelisca {
+    padding-block: var(--prostor-sekcije) clamp(3rem, 2rem + 3vw, 5rem);
+    background: var(--zajbelj);
+  }
+
+  .zelisca__mreza {
+    display: grid;
+    gap: 3rem;
+  }
+
+  .zelisca__uvod {
+    display: grid;
+    gap: 1.1rem;
+    align-content: start;
+  }
+
+  .zelisca h2 {
+    font-size: var(--fs-h2);
+    font-weight: 300;
+    max-width: 12ch;
+  }
+
+  .zelisca__besedilo {
+    font-size: var(--fs-uvod);
+    max-width: 30rem;
+  }
+
+  .zelisca__besedilo--mehko {
+    color: var(--besedilo-mehko);
+    font-size: var(--fs-osnova);
+  }
+
+  .zelisca__vsa {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--rob-mocan);
+    max-width: 30rem;
+  }
+
+  .zelisca__vsa p {
+    font-size: var(--fs-majhna);
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+  }
+
+  .zelisca__vsa ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.15rem 0;
+    font-family: var(--pisava-naslovi);
+    font-style: italic;
+    font-size: 1.15rem;
+    color: var(--oliva-temna);
+  }
+
+  .zelisca__vsa li:not(:last-child)::after {
+    content: ',';
+    margin-right: 0.4em;
+  }
+
+  /* Seznam izdelkov kot uredniški indeks */
+  .zelisca__seznam {
+    display: grid;
+  }
+
+  .zelisce {
+    display: grid;
+    grid-template-columns: 4.5rem 1fr;
+    gap: 0.5rem 1.25rem;
+    padding-block: 1.6rem;
+    border-top: 1px solid var(--rob-mocan);
+  }
+
+  .zelisce:last-child {
+    border-bottom: 1px solid var(--rob-mocan);
+  }
+
+  .zelisce__vizual {
+    grid-row: span 2;
+  }
+
+  .zelisce__foto,
+  .zelisce__risba {
+    width: 4.5rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+  }
+
+  .zelisce__risba {
+    display: grid;
+    place-items: center;
+    background: color-mix(in srgb, var(--papir) 65%, transparent);
+    color: var(--oliva);
+  }
+
+  .zelisce__risba :global(svg) {
+    width: 46%;
+  }
+
+  .zelisce__opis {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .zelisce h3 {
+    font-size: var(--fs-h3);
+    font-weight: 350;
+  }
+
+  .zelisce__oznaka {
+    font-size: var(--fs-drobna);
+    color: var(--oliva-temna);
+    letter-spacing: 0.01em;
+  }
+
+  .zelisce__opis p:last-child {
+    color: var(--besedilo-mehko);
+    max-width: 34rem;
+  }
+
+  .zelisce__cena {
+    grid-column: 2;
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    font-size: var(--fs-majhna);
+  }
+
+  .zelisce__cena span {
+    color: var(--besedilo-mehko);
+  }
+
+  .zelisce__cena strong {
+    font-family: var(--pisava-naslovi);
+    font-weight: 400;
+    font-size: 1.4rem;
+  }
+
+  .zelisca__opomba {
+    margin-top: 2.5rem;
+    font-size: var(--fs-drobna);
+    color: var(--besedilo-mehko);
+    max-width: var(--sirina);
+  }
+
+  @media (min-width: 40rem) {
+    .zelisce {
+      grid-template-columns: 6rem 1fr auto;
+      align-items: start;
+    }
+
+
+    .zelisce__vizual {
+      grid-row: auto;
+    }
+
+    .zelisce__foto,
+    .zelisce__risba {
+      width: 100%;
+    }
+
+    .zelisce__cena {
+      grid-column: 3;
+      flex-direction: column;
+      align-items: end;
+      gap: 0;
+      padding-top: 0.4rem;
+    }
+  }
+
+  @media (min-width: 56rem) {
+    .zelisca__mreza {
+      grid-template-columns: 5fr 7fr;
+      gap: clamp(3rem, 2rem + 4vw, 7rem);
+    }
+
+    .zelisca__uvod {
+      position: sticky;
+      top: calc(var(--glava-visina) + 2rem);
+    }
+  }
+</style>

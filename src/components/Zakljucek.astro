@@ -1,0 +1,178 @@
+﻿---
+import Motiv from './Motiv.astro';
+import { kontakt, navigacija, znamka } from '../data/vsebina';
+const leto = new Date().getFullYear();
+---
+
+<section id="kontakt" class="kontakt" aria-labelledby="kontakt-naslov">
+  <div class="ovoj kontakt__mreza">
+    <Motiv vrsta="cvet" class="kontakt__cvet" />
+    <h2 id="kontakt-naslov" data-razkrij>{kontakt.naslov}</h2>
+    <div class="kontakt__besedilo" data-razkrij>
+      <p class="kontakt__misel">{kontakt.besedilo}</p>
+      <!-- PROTOTIP: dejanski kontakt (e-pošta, telefon, kraj) dodamo po potrditvi. -->
+      <p class="kontakt__status">{kontakt.status}</p>
+    </div>
+  </div>
+</section>
+
+<footer class="noga" data-temno>
+  <div class="ovoj">
+    <div class="noga__vrh">
+      <!-- DELOVNO IME — zamenjaj po potrditvi. -->
+      <p class="noga__znamka">
+        <span>{znamka.ime}</span>
+        <small>{znamka.opis}</small>
+      </p>
+      <nav aria-label="Noga">
+        <ul>
+          {navigacija.map((p) => <li><a href={p.href}>{p.oznaka}</a></li>)}
+        </ul>
+      </nav>
+    </div>
+    <div class="noga__dno">
+      <p>© {leto} {znamka.ime}</p>
+      <p class="noga__prototip">Lokalni prototip · fotografije so začasni vizuali</p>
+      <a href="#vrh">Na vrh</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .kontakt {
+    position: relative;
+    padding-block: var(--prostor-sekcije);
+    background:
+      radial-gradient(60% 80% at 100% 100%, color-mix(in srgb, var(--glina) 18%, transparent), transparent 70%),
+      var(--podlaga);
+    overflow: clip;
+  }
+
+  .kontakt__mreza {
+    position: relative;
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .kontakt :global(.kontakt__cvet) {
+    position: absolute;
+    right: var(--rob-strani);
+    top: calc(-1 * var(--prostor-sekcije) + 1.5rem);
+    width: clamp(4rem, 3rem + 3vw, 6.5rem);
+    color: var(--oliva);
+    opacity: 0.5;
+  }
+
+  .kontakt h2 {
+    font-size: var(--fs-h1);
+    font-weight: 300;
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    max-width: 11ch;
+  }
+
+  .kontakt__besedilo {
+    display: grid;
+    gap: 1.5rem;
+    max-width: 30rem;
+    align-content: end;
+  }
+
+  .kontakt__misel {
+    font-family: var(--pisava-naslovi);
+    font-style: italic;
+    font-size: var(--fs-h3);
+    line-height: 1.25;
+    color: var(--oliva-temna);
+  }
+
+  .kontakt__status {
+    font-size: var(--fs-majhna);
+    color: var(--besedilo-mehko);
+  }
+
+  @media (min-width: 56rem) {
+    .kontakt__mreza {
+      grid-template-columns: 7fr 5fr;
+      align-items: end;
+    }
+  }
+
+  .noga {
+    padding-block: clamp(3rem, 2rem + 3vw, 5rem) 2rem;
+    background: var(--gozd);
+    color: var(--podlaga);
+    font-size: var(--fs-majhna);
+  }
+
+  .noga__vrh {
+    display: grid;
+    gap: 2.5rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--podlaga) 18%, transparent);
+  }
+
+  .noga__znamka {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .noga__znamka span {
+    font-family: var(--pisava-naslovi);
+    font-weight: 300;
+    font-size: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .noga__znamka small {
+    font-size: var(--fs-majhna);
+    color: color-mix(in srgb, var(--podlaga) 72%, transparent);
+  }
+
+  .noga ul {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .noga a {
+    color: inherit;
+    text-decoration-color: color-mix(in srgb, var(--podlaga) 40%, transparent);
+  }
+
+  .noga a:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .noga :focus-visible {
+    outline-color: var(--zarenje);
+  }
+
+  .noga__dno {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 2rem;
+    justify-content: space-between;
+    padding-top: 1.5rem;
+    font-size: var(--fs-drobna);
+    color: color-mix(in srgb, var(--podlaga) 75%, transparent);
+  }
+
+  .noga__prototip {
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--podlaga) 30%, transparent);
+  }
+
+  @media (min-width: 56rem) {
+    .noga__vrh {
+      grid-template-columns: 1fr auto;
+      align-items: end;
+    }
+
+    .noga ul {
+      grid-template-columns: repeat(2, auto);
+      gap: 0.6rem 3rem;
+    }
+  }
+</style>
