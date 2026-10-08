@@ -41,9 +41,13 @@ Manjkajo fotografije dejanskih izdelkov, imena, materiali, dimenzije, cene, more
 
 Ponudba čajnih mešanic ni opisana. Navedeni so naslovi receptov za rmanovo, ognjičevo in trpotčevo mazilo, ne pa sestavine ali postopek. V kazalu so kategorije mazila, macerati in sirupi. Ne ustvarjaj domnevnih receptov za zapolnitev strani.
 
+**Posodobitev 8. 10. 2026**
+
+Prejeto: logotip (ime znamke Potovanje Življenja), e-pošta `potovanje.zivljenja@gmail.com`, `delavnica.docx`, opisi petih energijskih storitev (Notranja moč, Dotik angela, Podpora in svetovanje, Pregled energetskih centrov, Kansa Wand masaža) s tremi uporabljenimi slikami ter recepti za macerate, mazila in sirupe. Reiki je umaknjen iz ponudbe. Recepti še niso vgrajeni (glej NAPREDEK.md). Facebook URL manjka. Spodnji odstavek velja za cene, kraj in potrdila, ki jih še ni.
+
 **Energijske storitve**
 
-Za energijsko podporo, reiki, pregled energetskih centrov in Kansa masažo obraza potrebujemo: potrjen opis, potek, trajanje, ceno, kraj izvajanja in način dogovora za termin. Potrdila niso priložena. Ne pripisuj strokovnih nazivov ali dokazanih učinkov.
+Za energijske storitve še potrebujemo: potrjen opis, potek, trajanje, ceno, kraj izvajanja in način dogovora za termin. Potrdila niso priložena. Ne pripisuj strokovnih nazivov ali dokazanih učinkov.
 
 **Uredniške točke pred objavo**
 

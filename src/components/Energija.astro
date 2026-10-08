@@ -1,7 +1,7 @@
 ---
 import Motiv from './Motiv.astro';
-import { energija } from '../data/vsebina';
-// Opisi, trajanje in cene storitev še niso prejeti; seznam vodi do povpraševanja.
+import { energija, urlStoritve } from '../data/vsebina';
+// Pet aktivnih storitev; vsaka kartica vodi na svojo podstran z opisom in e-poštnim pozivom.
 ---
 
 <section id="energijski" class="energija" data-ton="energija" data-temno aria-labelledby="energija-naslov">
@@ -12,13 +12,18 @@ import { energija } from '../data/vsebina';
     <div class="energija__glava" data-razkrij="levo">
       <p class="nadnaslov">Energijski kotiček</p>
       <h2 id="energija-naslov">{energija.podnaslov}</h2>
+      <p class="energija__uvod">{energija.uvod}</p>
+      <a class="povezava energija__vse" href="/energijski-koticek/">Vse o energijskem kotičku</a>
     </div>
     <ul class="energija__storitve" data-stagger aria-label="Storitve">
       {energija.storitve.map((s) => (
         <li>
-          <a href="#kontakt">
-            <span class="energija__ime">{s}</span>
-            <span class="energija__vprasaj">Povprašaj</span>
+          <a href={urlStoritve(s.slug)}>
+            <span class="energija__besedilo">
+              <span class="energija__ime">{s.ime}</span>
+              <span class="energija__oznaka">{s.oznaka}</span>
+            </span>
+            <span class="energija__vprasaj">Več o storitvi</span>
           </a>
         </li>
       ))}
@@ -100,6 +105,27 @@ import { energija } from '../data/vsebina';
     transition: transform var(--mehko), color var(--hitro);
   }
 
+  .energija__uvod {
+    max-width: 26rem;
+    color: color-mix(in srgb, var(--podlaga) 82%, transparent);
+  }
+
+  .energija__vse {
+    justify-self: start;
+    margin-top: 0.5rem;
+    color: var(--zarenje);
+  }
+
+  .energija__besedilo {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .energija__oznaka {
+    font-size: var(--fs-majhna);
+    color: color-mix(in srgb, var(--podlaga) 70%, transparent);
+  }
+
   .energija__vprasaj {
     flex-shrink: 0;
     font-size: var(--fs-majhna);
@@ -123,6 +149,97 @@ import { energija } from '../data/vsebina';
   @media (hover: hover) and (prefers-reduced-motion: no-preference) {
     .energija__storitve a:hover .energija__ime {
       transform: translateX(0.75rem);
+    }
+  }
+
+  /* Telefon: storitve kot ploščice v dveh stolpcih; liha zadnja ploščica zavzame celo vrstico */
+  @media (max-width: 39.99rem) {
+    .energija__mreza {
+      gap: 1.75rem;
+    }
+
+    .energija__glava {
+      gap: 0.6rem;
+    }
+
+    .energija__krogi {
+      top: -4rem;
+      right: -12rem;
+      width: 26rem;
+    }
+
+    .energija__storitve {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.6rem;
+    }
+
+    .energija__storitve a,
+    .energija__storitve li:last-child a {
+      position: relative;
+      height: 100%;
+      min-height: 7.5rem;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem 0.95rem 0.9rem;
+      border: 0;
+      border-radius: 1rem;
+      background: color-mix(in srgb, var(--podlaga) 6%, transparent);
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--podlaga) 16%, transparent);
+      transition:
+        background-color 0.2s var(--ease-out),
+        transform 0.14s var(--ease-out);
+    }
+
+    .energija__storitve a::before {
+      content: '';
+      position: absolute;
+      top: 1rem;
+      right: 0.95rem;
+      width: 0.55rem;
+      height: 0.55rem;
+      border-radius: 50%;
+      background: var(--zarenje);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--zarenje) 18%, transparent);
+    }
+
+    .energija__storitve a:active {
+      transform: scale(0.97);
+      background: color-mix(in srgb, var(--zarenje) 14%, transparent);
+    }
+
+    .energija__ime {
+      padding-right: 1rem;
+      font-size: 1.25rem;
+      line-height: 1.15;
+    }
+
+    .energija__storitve li:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+
+    .energija__storitve li:last-child:nth-child(odd) a {
+      min-height: 0;
+    }
+
+    .energija__oznaka {
+      font-size: var(--fs-drobna);
+      line-height: 1.35;
+    }
+
+    .energija__uvod {
+      font-size: var(--fs-majhna);
+    }
+
+    .energija__vprasaj {
+      font-size: var(--fs-drobna);
+      color: var(--zarenje);
+    }
+
+    .energija__vprasaj::after {
+      content: ' →';
+      content: ' →' / '';
     }
   }
 

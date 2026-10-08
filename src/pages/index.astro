@@ -2,6 +2,8 @@
 import Osnova from '../layouts/Osnova.astro';
 import Glava from '../components/Glava.astro';
 import ScrollVideoHero from '../components/ScrollVideoHero.astro';
+import Delavnice from '../components/Delavnice.astro';
+import ZnamkaPas from '../components/ZnamkaPas.astro';
 import Zgodba from '../components/Zgodba.astro';
 import Koticki from '../components/Koticki.astro';
 import Nakit from '../components/Nakit.astro';
@@ -13,12 +15,14 @@ import { znamka } from '../data/vsebina';
 ---
 
 <Osnova
-  naslov={`${znamka.ime} — nakit, zelišča in energijska podpora`}
-  opis="Unikatni nakit, sušena zelišča in snopi ter energijske storitve. Lokalni prototip."
+  naslov={`${znamka.ime} — delavnice, nakit, zelišča in energijska podpora`}
+  opis="Potovanje Življenja: ustvarjalne delavnice, unikatni nakit, sušena zelišča in snopi ter energijska podpora za odrasle in otroke."
 >
   <Glava />
   <main id="vsebina">
     <ScrollVideoHero />
+    <Delavnice />
+    <ZnamkaPas />
     <Zgodba />
     <Koticki />
     <Nakit />

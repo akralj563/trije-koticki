@@ -1,0 +1,129 @@
+---
+// Dve vrsti delavnic (domača stran in /delavnice/). Fotografij delavnic še ni, zato lastni motivi.
+import Motiv from './Motiv.astro';
+import { delavnice } from '../data/vsebina';
+
+interface Props {
+  /** Raven naslovov kartic (h3 na domači strani, h2 na podstrani). */
+  raven?: 'h2' | 'h3';
+}
+const { raven = 'h3' } = Astro.props;
+const Naslov = raven;
+---
+
+<ul class="delavnice-kartice" data-stagger>
+  {delavnice.vrste.map((v, i) => (
+    <li class:list={['delavnica', `delavnica--${v.id}`]}>
+      <div class="delavnica__motiv" aria-hidden="true">
+        <Motiv vrsta={v.motiv} />
+      </div>
+      <p class="delavnica__st" aria-hidden="true">0{i + 1}</p>
+      <Naslov class="delavnica__naslov">{v.naslov}</Naslov>
+      <p class="delavnica__opis">{v.opis}</p>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .delavnice-kartice {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .delavnica {
+    position: relative;
+    display: grid;
+    align-content: end;
+    gap: 0.6rem;
+    min-height: 15rem;
+    padding: clamp(1.4rem, 1rem + 1.6vw, 2.5rem);
+    border-radius: clamp(1.25rem, 0.9rem + 1vw, 2rem);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .delavnica--mazilo {
+    background:
+      radial-gradient(60% 70% at 90% 10%, color-mix(in srgb, var(--zarenje) 30%, transparent), transparent 70%),
+      #47513a;
+    color: var(--podlaga);
+  }
+
+  .delavnica--nakit {
+    background:
+      radial-gradient(60% 70% at 85% 20%, color-mix(in srgb, var(--papir) 85%, transparent), transparent 70%),
+      linear-gradient(135deg, var(--pesek) 0%, #dcbfa8 100%);
+    color: var(--gozd);
+  }
+
+  .delavnica__motiv {
+    position: absolute;
+    z-index: -1;
+    top: 1.25rem;
+    right: 1.25rem;
+    width: clamp(5rem, 3.5rem + 6vw, 9rem);
+  }
+
+  .delavnica--mazilo .delavnica__motiv {
+    color: var(--zarenje);
+    opacity: 0.8;
+  }
+
+  .delavnica--nakit .delavnica__motiv {
+    color: var(--glina-temna);
+    opacity: 0.75;
+  }
+
+  .delavnica__st {
+    font-family: var(--pisava-naslovi);
+    font-style: italic;
+    font-size: var(--fs-uvod);
+    opacity: 0.8;
+  }
+
+  .delavnica__naslov {
+    font-size: var(--fs-h3);
+    font-weight: 350;
+  }
+
+  .delavnica__opis {
+    max-width: 30rem;
+    font-size: var(--fs-majhna);
+    line-height: 1.55;
+  }
+
+  .delavnica--mazilo .delavnica__opis {
+    color: color-mix(in srgb, var(--podlaga) 88%, transparent);
+  }
+
+  .delavnica--nakit .delavnica__opis {
+    color: var(--besedilo-mehko);
+  }
+
+  @media (max-width: 39.99rem) {
+    .delavnica {
+      min-height: 0;
+      padding-top: 3.25rem;
+    }
+
+    .delavnica__motiv {
+      top: 0.9rem;
+      right: 0.9rem;
+      width: 3.5rem;
+    }
+  }
+
+  @media (min-width: 40rem) {
+    .delavnice-kartice {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .delavnica {
+      min-height: 19rem;
+    }
+
+    .delavnica__opis {
+      font-size: var(--fs-osnova);
+    }
+  }
+</style>

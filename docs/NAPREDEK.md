@@ -1,13 +1,63 @@
 # Napredek
 
-Zadnja posodobitev: 6. 10. 2026. Faza: lokalni vizualni prototip domače strani s scroll izkušnjo (ni objavljeno).
+Zadnja posodobitev: 8. 10. 2026. Faza: lokalni prototip, razširjen z gradivom naročnice (ni objavljeno, ni commita).
 
-**Narejeno**
+**Razširitev 8. 10. 2026 (novo gradivo naročnice)**
+
+- Znamka: **Potovanje Življenja** (potrjeno z logotipom). Ime v glavi, nogi, naslovih strani in opisih. »Trije kotički« ostaja samo naslov sekcije. Strukturiranih podatkov ni.
+- Logotip: `Kopija.jpeg` → `src/assets/brand/potovanje-zivljenja-logo.jpeg` (nespremenjen, servira se prek Astro `Image`, WebP). Prikazan v predstavitvenem pasu `ZnamkaPas.astro` na plošči v barvi ozadja logotipa (#ECDFCC); v glavi ostaja berljivo tekstovno ime.
+- Kontakt: `potovanje.zivljenja@gmail.com` z `mailto:` (z vnaprej izpolnjeno zadevo) v kontaktu, nogi, delavnicah in pri vseh storitvah. Brez obrazca. `povezave.facebookUrl` je pripravljen in prazen; povezava se izriše samo, ko je vpisan potrjen URL.
+- Delavnice: v heroju drugi poziv »Ustvarjalne delavnice« (→ `#delavnice`); takoj po heroju sekcija `Delavnice.astro` (dve kartici, sobote, brez predznanja, prijava po e-pošti, povezava na podstran). Nova stran `/delavnice/` (lektorirano iz `delavnica.docx`). Lokacija, cena, trajanje in termini niso navedeni, ker jih ni v gradivu.
+- Energijski kotiček: reiki odstranjen iz ponudbe, navigacije in podatkov. Pet storitev v enem modelu (`energija.storitve` v `src/data/vsebina.ts`) in ena dinamična predloga `src/pages/energijski-koticek/[slug].astro` (`getStaticPaths`). Pregledna stran `/energijski-koticek/`. Domači blok vodi na podstrani. Dotik angela ima povezavi na Notranjo moč in Podporo in svetovanje.
+- Navigacija: Delavnice · Unikatni kotiček · Zeliščni kotiček · Energijski kotiček · Kontakt (absolutne poti, delujejo tudi s podstrani).
+- Nove komponente: `Delavnice`, `KarticeDelavnic`, `ZnamkaPas`, `PodstranUvod`, `PozivEposta`. `Zakljucek` ima `sKontaktom={false}` za podstrani (samo noga).
+- Obstoječe uporabnikove spremembe (mobilni CSS v devetih datotekah) so ohranjene; datoteke so urejene le z dodatki.
+
+**Uredniške odločitve pri besedilih storitev (preveri z naročnico)**
+
+- Izpuščene zdravstvene navedbe: pri Dotiku angela »pogosti prehladi, viroze, vnetja in druge zdravstvene težave« ter »agresivno vedenje / vedenjske težave«; pri Kansa masaži učinki na limfo, toksine, stresne hormone, spanje, biokemija bakra in »energija Venere / plodnost«; pri Notranji moči in pregledu besedi »zdravje«. Seznam »priporočljiv pri« je preoblikovan v »starši se zanjo pogosto odločijo, ko otrok doživlja«.
+- Dodana odgovorna opomba (po zgledu opombe pri zeliščih): »Energijske storitve so namenjene podpori dobremu počutju in ne nadomeščajo zdravniške, psihološke ali druge strokovne obravnave.«
+- Izraza »terapija« in »terapevt« sta zamenjana s »podpora«, da besedilo ne nakazuje strokovnega naziva.
+- Delavnice so v tikanju (kot izvirnik), storitve v vikanju; ženska oblika »ustvarila sama« je spremenjena v nevtralno.
+- Odsek »Komu je namenjena« je pri Kansa masaži in Pregledu centrov izpeljan iz besedila, ni dobesedno v gradivu.
+
+**Pred javno objavo dokazno potrditi** (v podatkih kot `potrditi`)
+
+- Kansa: usposabljanje pri ge. Poloni Kršmanc Šiško in njeni nazivi (magisterij kineziologije, kvalificirana maserka, Indija, LCIC International Ayurvedic Centre London) ter soglasje za objavo njenega imena.
+- Kansa: certifikat avtentičnosti pripomočka. Logotipov ustanov in fotografij certifikatov ni (niso priloženi).
+- Brezplačen uvodni pogovor in brezplačna kratka podpora (Notranja moč, Pregled centrov).
+
+**Slike naročnice** (`src/assets/narocnica/`, izluščene iz Wordovih dokumentov 8. 10. 2026, izvorni dokumenti niso spremenjeni)
+
+| Datoteka | Izvor | Uporaba |
+|---|---|---|
+| `dotik-angela.jpeg` (359 × 640) | `(energiski kotiček) DOTIK ANGELA.docx` | Dotik angela, pregledna stran |
+| `podpora-in-svetovanje.jpeg` (736 × 981) | `(energisjki kotiček) PODPORA IN SVETOVANJE.docx` | Podpora in svetovanje, pregledna stran |
+| `notranja-moc.jpeg` (735 × 919) | `(energijski kotiček) ENERGIJSKA PODPORA.docx` | Notranja moč, pregledna stran |
+| — | `(energijski kotiček) Kansa wand MASAŽA.docx` (1000 × 1000) | **Ni uporabljena**: videti je kot produktna/stock fotografija s prepoznavnim obrazom, vir in pravice niso znani. |
+
+Vse tri uporabljene slike so videti kot slike s spleta ali generirane; vir in pravica uporabe nista znana. Na straneh so označene »Začasni vizual« in jih je treba pred objavo potrditi ali zamenjati. `Dotik angela` je majhna (359 px), zato je na namizju rahlo mehka. DOCX datoteke in posnetki e-pošte niso v projektu ali `public/`.
+
+**Preverjeno (8. 10. 2026)**
+
+- `npm run build`: uspešen, 8 strani, brez opozoril (prvi poskus je padel zaradi pomanjkanja sistemskega pomnilnika; ponovitev uspešna). `tsc --noEmit` (začasno prek `npx -p typescript@5`): brez napak (ne preverja `.astro` datotek).
+- Pregled prek CDP (Edge headless; Chrome/Playwright ni nameščen) pri 390 × 844 in 1440 × 900 z `prefers-reduced-motion: reduce`, na `npm run preview`: vseh 8 strani brez vodoravnega overflowa, brez napak v konzoli, `noindex, nofollow` povsod, vse notranje povezave in sidra imajo cilj. Posnetki v `.pregled/razsiritev/` (v .gitignore).
+- Ni preverjeno: animacije brez reduced motion na podstraneh, mobilni meni s petimi postavkami ob odpiranju, resnični telefon, odpiranje `mailto:` v poštnem odjemalcu.
+
+**Odprta vprašanja (nova)**
+
+- Točen URL Facebook strani »potovanje življenja« (vpiši v `povezave.facebookUrl`).
+- Recepti (macerati, mazila, sirupi): dokumenti so prebrani, a **niso vgrajeni** — navodila za ta del niso bila prejeta (prompt je bil prekinjen), gradivo pa vsebuje zdravstvene navedbe in odmerke (npr. sirupi »pri kašlju ali prehladu«), ki po CLAUDE.md zahtevajo ločen vsebinski pregled.
+- Lokacija, cena, trajanje in termini delavnic; cene, kraj in trajanje storitev (razen ~1 ure pri Notranji moči).
+- Ali naj se opis znamke »ustvarjalnost · narava · ravnovesje« (delovni) zamenja z »Soul healing« iz logotipa ali drugim podnaslovom.
+- Potrditev izpuščenih zdravstvenih navedb in dodane opombe.
+
+**Prejšnje stanje (6. 10. 2026)**
 
 - Okolje: Node 24.13.0, npm 11.6.2, Astro 7.3.5, TypeScript (strict), navaden CSS s spremenljivkami. Pisavi Newsreader in Figtree (Fontsource, SIL OFL, latin-ext). `gsap` 3.15 (ScrollTrigger); drugih animacijskih knjižnic ni.
 - Domača stran: prosojna glava z mobilnim menijem, **celozaslonski hero s posnetkom, ki ga vodi pomikanje**, editorialna zgodba, trije kotički kot plasti, Unikatni kotiček, izbor šestih zelišč s ceno, trije snopi s ceno, štiri energijske storitve, skoraj celozaslonski zaključni del s kontaktom in noga.
 - Komponente: `src/components/` (Glava, ScrollVideoHero, Zgodba, Koticki, Nakit, Zelisca, Snopi, Energija, Zakljucek, Motiv). Prejšnji `Uvod.astro` (obokana fotografija) je zamenjan s `ScrollVideoHero.astro`. Vsa vsebina in nastavitve heroja so v `src/data/vsebina.ts` (`uvod`, `heroVizual`).
-- Delovno ime »Trije kotički« (ni potrjeno ime znamke).
+- ~~Delovno ime »Trije kotički«~~ — od 8. 10. 2026 potrjeno ime Potovanje Življenja.
 - Indeksiranje ostaja onemogočeno: meta `noindex, nofollow` v `src/layouts/Osnova.astro` in `public/robots.txt` (`Disallow: /`).
 
 **Scroll hero (ScrollVideoHero.astro + src/scripts/scrollVideo.ts)**
@@ -62,21 +112,21 @@ Hero fotografija je raztegnjena čez cel zaslon in je na namizju opazno mehka (4
 **Pred produkcijo zamenjati ali potrditi**
 
 - Hero posnetek in poster (zgoraj); pregled scrubbinga na resničnih telefonih.
-- Vseh pet fotografij, delovno ime in opis, cene in količine, besedila (lektura, tikanje/vikanje), poimenovanja storitev.
+- Vseh pet fotografij in tri slike iz energijskih dokumentov, opis znamke, cene in količine, besedila (lektura, tikanje/vikanje), podatki iz razdelka »Pred javno objavo dokazno potrditi«.
 - Ali je posnetek dejansko gradivo naročnice; dokler ni, ostane oznaka »Začasni vizual« (`heroVizual.oznaka`).
 - Pred objavo: odstraniti noindex in `Disallow: /`, nastaviti `site`, odstraniti oznake začasnega gradiva.
 
 **Odprti podatki**
 
-- Ime znamke in ustvarjalke, logotip, domena.
-- Kontakt: e-pošta, telefon, kraj, način povpraševanja, poslovni podatki.
+- Ime ustvarjalke, domena (naročnik je še ne ureja), Facebook URL.
+- Kontakt: telefon, kraj, poslovni podatki (e-pošta je potrjena).
 - Nakit: fotografije, imena, materiali, dimenzije, cene.
-- Zelišča: opisi za smilj in semena koprive, čaji, pregled zdravstvenih navedb (niso uporabljene).
-- Energijske storitve: opisi, potek, trajanje, cene, kraj.
+- Zelišča: opisi za smilj in semena koprive, čaji, pregled zdravstvenih navedb (niso uporabljene); recepti (glej zgoraj).
+- Energijske storitve: cene, kraj, trajanje (razen Notranje moči), potrditve iz razdelka zgoraj.
 - Kdo bo urejal vsebino (vpliva na izbiro CMS).
 
 **Naslednji korak**
 
-1. Dodati `hero-scroll.mp4` in `hero-poster.avif`, zagnati `npm run preveri:video` in `npm run build`.
-2. Pregled na resničnem telefonu in z naročnico (`npm run preview` → http://localhost:4321/).
-3. Pridobiti ime, kontakt, lastne fotografije in fotografije nakita; nato podstran `/zeliscni-koticek/`.
+1. Naročnici pokazati lokalni predogled (`npm run preview` → http://localhost:4321/, `/delavnice/`, `/energijski-koticek/`) in potrditi besedila storitev ter izpuščene navedbe.
+2. Pridobiti Facebook URL, potrditve za Kansa in odločitev o receptih; nato podstran `/zeliscni-koticek/` in morebitni `/recepti/`.
+3. Dodati `hero-scroll.mp4` in `hero-poster.avif` (če posnetek obstaja), zagnati `npm run preveri:video` in `npm run build`.

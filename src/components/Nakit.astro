@@ -198,6 +198,101 @@ import { nakit } from '../data/vsebina';
     color: var(--oliva-temna);
   }
 
+  /* Telefon: krajši ritem, pomeni v mreži 2 × 2, namere v eni vrstici */
+  @media (max-width: 39.99rem) {
+    .nakit__vrh {
+      gap: 1.5rem;
+    }
+
+    .nakit__pomeni {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.5rem;
+    }
+
+    .nakit__pomeni li {
+      display: flex;
+      align-items: flex-end;
+      min-height: 4.6rem;
+      padding: 0.75rem 0.85rem;
+      border: 0;
+      border-radius: 0.9rem;
+      background: color-mix(in srgb, var(--papir) 65%, transparent);
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--glina) 22%, transparent);
+      font-size: 1.12rem;
+    }
+
+    .nakit__pomeni li:nth-child(odd) {
+      color: var(--glina-temna);
+    }
+
+    .nakit__pomeni li.nakit__pomeni-konec {
+      grid-column: 1 / -1;
+      min-height: 0;
+      padding: 0.5rem 0 0;
+      background: none;
+      box-shadow: none;
+      font-size: var(--fs-majhna);
+    }
+
+    .nakit__sredina {
+      gap: 1.5rem;
+      margin-top: 2.75rem;
+    }
+
+    .nakit__besedilo {
+      gap: 0.8rem;
+      font-size: var(--fs-majhna);
+    }
+
+    .nakit__besedilo p:first-child {
+      font-size: 1.3rem;
+    }
+
+    .nakit__namere {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.5rem;
+      align-items: start;
+    }
+
+    .nakit__namere li,
+    .nakit__namere li:nth-child(2),
+    .nakit__namere li:nth-child(3) {
+      padding: 0.1rem 0 0 0.6rem;
+      border-left: 1px solid color-mix(in srgb, var(--glina) 45%, transparent);
+      font-size: 1.15rem;
+      line-height: 1.15;
+    }
+
+    .nakit__namere li:nth-child(2) {
+      margin-top: 0.9rem;
+    }
+
+    .nakit__namere li:nth-child(3) {
+      margin-top: 1.8rem;
+    }
+
+    .nakit__sepet {
+      gap: 0.8rem;
+      margin-top: 3rem;
+      padding-top: 2.5rem;
+    }
+
+    .nakit__obroc {
+      width: 19rem;
+      translate: -50% -8%;
+    }
+
+    .nakit__sepet-uvod {
+      font-size: var(--fs-majhna);
+      max-width: 22ch;
+    }
+
+    .nakit__sklep {
+      font-size: 1.15rem;
+      margin-bottom: 0.5rem;
+    }
+  }
+
   @media (min-width: 56rem) {
     .nakit__vrh {
       grid-template-columns: 7fr 5fr;

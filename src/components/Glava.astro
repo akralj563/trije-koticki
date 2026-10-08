@@ -1,12 +1,15 @@
 ---
 import { navigacija, znamka } from '../data/vsebina';
+
+// Na domači strani znamka vodi na vrh, na podstraneh na domačo stran.
+const domov = Astro.url.pathname === '/' ? '#vrh' : '/';
 ---
 
 <!-- na-temnem: stran se začne nad temnim herojem; skript stanje sproti posodablja. -->
 <header class="glava na-temnem" data-glava>
   <div class="glava__notranje">
-    <!-- DELOVNO IME »Trije kotički« — zamenjaj po potrditvi imena znamke. -->
-    <a class="glava__znamka" href="#vrh">
+    <!-- Ime znamke kot berljivo besedilo; celoten široki logotip je v predstavitvenem pasu domače strani. -->
+    <a class="glava__znamka" href={domov}>
       <span class="glava__ime">{znamka.ime}</span>
       <span class="glava__opis">{znamka.opis}</span>
     </a>
@@ -268,6 +271,58 @@ import { navigacija, znamka } from '../data/vsebina';
 
   :global(body.meni-odprt) {
     overflow: hidden;
+  }
+
+  @media (max-width: 39.99rem) {
+    .glava__ime {
+      font-size: 1.3rem;
+    }
+
+    .glava__opis {
+      font-size: 0.66rem;
+    }
+
+    .glava__gumb {
+      min-height: 2.5rem;
+      padding: 0 0.85rem;
+      gap: 0.5rem;
+      font-size: var(--fs-drobna);
+    }
+
+    .glava__meni a {
+      font-size: 1.75rem;
+      padding: 0.85rem 0;
+    }
+  }
+
+  .glava__gumb:active {
+    transform: scale(0.96);
+  }
+
+  /* Postavke menija se ob odpiranju zaporedno dvignejo (samo mobilni meni) */
+  @media (max-width: 55.99rem) and (prefers-reduced-motion: no-preference) {
+    .glava__gumb {
+      transition: transform 0.14s var(--ease-out);
+    }
+
+    :global(html.js) .glava__meni li {
+      opacity: 0;
+      transform: translateY(0.75rem);
+      transition:
+        opacity 0.2s var(--ease-out),
+        transform 0.2s var(--ease-out);
+    }
+
+    :global(html.js) .glava__meni.je-odprt li {
+      opacity: 1;
+      transform: none;
+      transition-duration: 0.45s;
+    }
+
+    .glava__meni.je-odprt li:nth-child(2) { transition-delay: 0.05s; }
+    .glava__meni.je-odprt li:nth-child(3) { transition-delay: 0.1s; }
+    .glava__meni.je-odprt li:nth-child(4) { transition-delay: 0.15s; }
+    .glava__meni.je-odprt li:nth-child(5) { transition-delay: 0.2s; }
   }
 
   /* Brez JavaScripta ostane meni viden kot preprost seznam */

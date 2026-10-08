@@ -24,6 +24,8 @@ const izbor = zelisca.izbor.map((z) => ({ ...z, motiv: z.slika ? null : motivi[m
       </div>
     </div>
 
+    <!-- Telefon: skupna oznaka namesto ponavljanja pri vsaki kartici -->
+    <p class="zelisca__sestava" aria-hidden="true">ročno nabrano • nežno sušeno • brez dodatkov</p>
     <ul class="zelisca__seznam" data-stagger aria-label="Izbor sušenih zelišč">
       {izbor.map((z) => (
         <li class:list={['zelisce', { 'zelisce--foto': z.slika }]}>
@@ -196,6 +198,114 @@ const izbor = zelisca.izbor.map((z) => ({ ...z, motiv: z.slika ? null : motivi[m
     font-size: var(--fs-drobna);
     color: var(--besedilo-mehko);
     max-width: var(--sirina);
+  }
+
+  .zelisca__sestava {
+    display: none;
+  }
+
+  /* Telefon: kartice v dveh stolpcih namesto dolgega seznama */
+  @media (max-width: 39.99rem) {
+    .zelisca__mreza {
+      gap: 1.25rem;
+    }
+
+    .zelisca__uvod {
+      gap: 0.7rem;
+    }
+
+    .zelisca__besedilo--mehko {
+      font-size: var(--fs-majhna);
+    }
+
+    .zelisca__vsa {
+      margin-top: 0.5rem;
+      padding-top: 1rem;
+    }
+
+    .zelisca__vsa p {
+      font-size: var(--fs-drobna);
+      letter-spacing: 0.04em;
+    }
+
+    .zelisca__vsa ul {
+      gap: 0.35rem;
+      font-size: 0.95rem;
+    }
+
+    .zelisca__vsa li {
+      padding: 0.2rem 0.7rem;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--papir) 70%, transparent);
+      box-shadow: inset 0 0 0 1px var(--rob);
+    }
+
+    .zelisca__vsa li:not(:last-child)::after {
+      content: none;
+    }
+
+    .zelisca__sestava {
+      display: block;
+      margin-bottom: -0.5rem;
+      font-size: var(--fs-drobna);
+      letter-spacing: 0.03em;
+      color: var(--oliva-temna);
+    }
+
+    .zelisca__seznam {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.6rem;
+    }
+
+    .zelisce,
+    .zelisce:last-child {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      padding: 0.85rem 0.85rem 0.9rem;
+      border: 0;
+      border-radius: 1rem;
+      background: color-mix(in srgb, var(--papir) 72%, transparent);
+      box-shadow: 0 10px 24px -18px color-mix(in srgb, var(--gozd) 50%, transparent);
+    }
+
+    .zelisce__foto,
+    .zelisce__risba {
+      width: 2.9rem;
+    }
+
+    .zelisce__vizual {
+      margin-bottom: 0.2rem;
+    }
+
+    .zelisce h3 {
+      font-size: 1.2rem;
+    }
+
+    .zelisce__oznaka {
+      display: none;
+    }
+
+    .zelisce__opis p:last-child {
+      font-size: 0.8rem;
+      line-height: 1.45;
+    }
+
+    .zelisce__cena {
+      margin-top: auto;
+      padding-top: 0.45rem;
+      justify-content: space-between;
+      border-top: 1px solid var(--rob);
+      font-size: var(--fs-drobna);
+    }
+
+    .zelisce__cena strong {
+      font-size: 1.1rem;
+    }
+
+    .zelisca__opomba {
+      margin-top: 1.5rem;
+    }
   }
 
   @media (min-width: 40rem) {

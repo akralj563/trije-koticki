@@ -10,9 +10,11 @@ const [unikatni, zeliscni, energijski] = koticki;
   <div class="ovoj koticki__glava" data-razkrij>
     <h2 id="koticki-naslov">Trije kotički</h2>
     <p>Vsak s svojo zgodbo, a vsi povezani z isto željo.</p>
+    <p class="koticki__namig" aria-hidden="true">Povleci <span>→</span></p>
   </div>
 
-  <div class="ovoj koticki__sklad">
+  <!-- Telefon: vodoravni drsnik (scroll-snap). Namizje: pripete plasti, ki se zlagajo. -->
+  <div class="ovoj koticki__sklad drsnik" data-drsnik>
     <!-- Unikatni: tipografska kompozicija z linijo perl (fotografij nakita še ni) -->
     <article class="plast plast--unikatni" data-plast aria-labelledby="plast-unikatni">
       <div class="plast__notranje">
@@ -65,6 +67,9 @@ const [unikatni, zeliscni, energijski] = koticki;
       </div>
       <div class="plast__senca" aria-hidden="true"></div>
     </article>
+  </div>
+  <div class="pike" data-pike role="group" aria-label="Izberi kotiček">
+    {koticki.map((k) => <button type="button" aria-label={k.naslov}></button>)}
   </div>
 </section>
 
@@ -249,6 +254,134 @@ const [unikatni, zeliscni, energijski] = koticki;
     translate: -50% -50%;
     color: var(--zarenje);
     opacity: 0.7;
+  }
+
+  .koticki__namig {
+    display: none;
+  }
+
+  /* Telefon in tablica: tri enako visoke kartice v vodoravnem drsniku */
+  @media (max-width: 55.99rem) {
+    .koticki__glava {
+      padding-bottom: 1.25rem;
+      align-items: end;
+    }
+
+    .koticki__glava p:not(.koticki__namig) {
+      flex-basis: 100%;
+      order: 3;
+      font-size: var(--fs-osnova);
+    }
+
+    .koticki__namig {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: var(--pisava-besedilo) !important;
+      font-style: normal !important;
+      font-size: var(--fs-drobna) !important;
+      letter-spacing: 0.04em;
+      color: var(--besedilo-mehko) !important;
+    }
+
+    .koticki__namig span {
+      display: inline-block;
+    }
+
+    .koticki__sklad {
+      gap: 0.75rem;
+    }
+
+    .plast {
+      min-height: 27rem;
+      border-radius: 1.25rem;
+      transform-origin: 50% 50%;
+    }
+
+    .plast__notranje {
+      gap: 1rem;
+      padding: 1.5rem 1.4rem 1.6rem;
+      align-content: end;
+      min-height: inherit;
+    }
+
+    .plast__besedilo {
+      gap: 0.55rem;
+    }
+
+    .plast h3 {
+      font-size: 1.85rem;
+    }
+
+    .plast__podnaslov {
+      font-size: var(--fs-majhna);
+    }
+
+    .plast__opis {
+      font-size: var(--fs-majhna);
+      line-height: 1.5;
+    }
+
+    .plast .povezava {
+      margin-top: 0.35rem;
+      font-size: var(--fs-majhna);
+    }
+
+    /* Unikatni: obroč perl kot vizual na vrhu kartice */
+    .plast__perle {
+      position: absolute;
+      top: 1.25rem;
+      right: -1.5rem;
+      width: 11rem;
+      opacity: 0.85;
+    }
+
+    .plast__izjava {
+      font-size: 1.6rem;
+    }
+
+    /* Zeliščni: fotografija nad besedilom, manjša */
+    .plast__foto {
+      justify-self: start;
+      width: 62%;
+    }
+
+    .plast__foto-velika {
+      aspect-ratio: 4 / 3;
+    }
+
+    .plast__foto-mala {
+      right: -26%;
+      bottom: -12%;
+      width: 44%;
+      border-width: 4px;
+    }
+
+    .plast__krogi {
+      inset: 34% auto auto 50%;
+      width: 26rem;
+    }
+
+    .pike {
+      color: var(--gozd);
+    }
+  }
+
+  @media (max-width: 55.99rem) and (prefers-reduced-motion: no-preference) {
+    /* Namig za drsenje: puščica trikrat nakaže smer, nato miruje */
+    .koticki__namig span {
+      animation: namig 1.4s var(--ease-out) 1.2s 3;
+    }
+
+    @keyframes namig {
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+      40% {
+        transform: translateX(0.35rem);
+      }
+    }
   }
 
   @media (min-width: 56rem) {

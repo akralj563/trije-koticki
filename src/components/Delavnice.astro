@@ -1,0 +1,107 @@
+---
+// Kompaktna predstavitev delavnic takoj po heroju (zahteva naročnice: vidne zelo zgodaj).
+import KarticeDelavnic from './KarticeDelavnic.astro';
+import { delavnice, mailto } from '../data/vsebina';
+---
+
+<section id="delavnice" class="delavnice" aria-labelledby="delavnice-naslov">
+  <div class="ovoj delavnice__ovoj">
+    <div class="delavnice__glava" data-razkrij>
+      <p class="nadnaslov">{delavnice.podnaslov}</p>
+      <h2 id="delavnice-naslov">{delavnice.naslov}</h2>
+      <p class="delavnice__uvod">{delavnice.besedilo}</p>
+    </div>
+
+    <KarticeDelavnic />
+
+    <div class="delavnice__dno" data-razkrij>
+      <ul class="delavnice__dejstva" aria-label="Na kratko">
+        <li>{delavnice.termin}</li>
+        <li>Predznanje ni potrebno.</li>
+      </ul>
+      <div class="delavnice__pozivi">
+        <a class="gumb" href={mailto(delavnice.zadeva)}>Prijava po e-pošti</a>
+        <a class="povezava" href="/delavnice/">Več o delavnicah</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .delavnice {
+    /* Spodaj manjši odmik: sledi predstavitveni pas z logotipom, ki je del istega uvoda. */
+    padding-block: clamp(3rem, 2rem + 4vw, 6rem) clamp(1.5rem, 1rem + 2vw, 3rem);
+    background: var(--podlaga);
+  }
+
+  .delavnice__ovoj {
+    display: grid;
+    gap: clamp(1.5rem, 1rem + 2vw, 2.75rem);
+  }
+
+  .delavnice__glava {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .delavnice__glava h2 {
+    font-size: var(--fs-h2);
+    font-weight: 300;
+  }
+
+  .delavnice__uvod {
+    max-width: 34rem;
+    font-size: var(--fs-uvod);
+    color: var(--besedilo-mehko);
+  }
+
+  .delavnice__dno {
+    display: grid;
+    gap: 1.25rem;
+    align-items: center;
+  }
+
+  .delavnice__dejstva {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .delavnice__dejstva li {
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    box-shadow: inset 0 0 0 1px var(--rob-mocan);
+    font-size: var(--fs-majhna);
+    color: var(--oliva-temna);
+  }
+
+  .delavnice__pozivi {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.75rem;
+  }
+
+  @media (min-width: 56rem) {
+    .delavnice__glava {
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+      column-gap: 3rem;
+    }
+
+    .delavnice__glava .nadnaslov,
+    .delavnice__glava h2 {
+      grid-column: 1;
+    }
+
+    .delavnice__uvod {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      align-self: end;
+    }
+
+    .delavnice__dno {
+      grid-template-columns: 1fr auto;
+    }
+  }
+</style>

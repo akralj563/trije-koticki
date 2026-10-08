@@ -1,25 +1,35 @@
 ---
 import Motiv from './Motiv.astro';
-import { kontakt, navigacija, znamka } from '../data/vsebina';
+import { kontakt, mailto, navigacija, povezave, znamka } from '../data/vsebina';
+
+interface Props {
+  /** Na podstraneh je poziv že na strani, zato se izriše samo noga. */
+  sKontaktom?: boolean;
+}
+const { sKontaktom = true } = Astro.props;
 const leto = new Date().getFullYear();
 ---
 
+{sKontaktom && (
 <section id="kontakt" class="kontakt" data-ton="kontakt" aria-labelledby="kontakt-naslov">
   <div class="ovoj kontakt__mreza">
     <Motiv vrsta="cvet" class="kontakt__cvet" />
     <h2 id="kontakt-naslov" data-razkrij="levo">{kontakt.naslov}</h2>
     <div class="kontakt__besedilo" data-razkrij="desno">
       <p class="kontakt__misel">{kontakt.besedilo}</p>
-      <!-- PROTOTIP: dejanski kontakt (e-pošta, telefon, kraj) dodamo po potrditvi. -->
-      <p class="kontakt__status">{kontakt.status}</p>
+      <p class="kontakt__status">{kontakt.poziv}</p>
+      <a class="kontakt__eposta" href={mailto()}>{povezave.eposta}</a>
+      {povezave.facebookUrl && (
+        <a class="povezava kontakt__fb" href={povezave.facebookUrl} rel="noopener">Facebook: potovanje življenja</a>
+      )}
     </div>
   </div>
 </section>
+)}
 
 <footer class="noga" data-temno>
   <div class="ovoj">
     <div class="noga__vrh" data-razkrij>
-      <!-- DELOVNO IME — zamenjaj po potrditvi. -->
       <p class="noga__znamka">
         <span>{znamka.ime}</span>
         <small>{znamka.opis}</small>
@@ -33,7 +43,8 @@ const leto = new Date().getFullYear();
     <div class="noga__dno">
       <p>© {leto} {znamka.ime}</p>
       <p class="noga__prototip">Lokalni prototip · fotografije so začasni vizuali</p>
-      <a href="#vrh">Na vrh</a>
+      <a href={mailto()}>{povezave.eposta}</a>
+      <a href="#">Na vrh</a>
     </div>
   </div>
 </footer>
@@ -95,6 +106,46 @@ const leto = new Date().getFullYear();
   .kontakt__status {
     font-size: var(--fs-majhna);
     color: var(--besedilo-mehko);
+  }
+
+  /* E-pošta je glavni poziv: velika, a se na ozkih zaslonih lahko prelomi. */
+  .kontakt__eposta {
+    justify-self: start;
+    max-width: 100%;
+    font-family: var(--pisava-naslovi);
+    font-size: clamp(1.3rem, 1rem + 1.4vw, 2.1rem);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+    color: var(--glina-temna);
+    text-decoration-color: color-mix(in srgb, var(--glina-temna) 45%, transparent);
+  }
+
+  .kontakt__eposta:hover {
+    text-decoration-color: currentColor;
+  }
+
+  @media (max-width: 39.99rem) {
+    .kontakt {
+      min-height: 0;
+      padding-block: 4.5rem 3.5rem;
+    }
+
+    .kontakt__mreza {
+      gap: 1.25rem;
+    }
+
+    .kontakt :global(.kontakt__cvet) {
+      top: -3rem;
+      width: 3.25rem;
+    }
+
+    .kontakt__besedilo {
+      gap: 0.9rem;
+    }
+
+    .kontakt__misel {
+      font-size: 1.2rem;
+    }
   }
 
   @media (min-width: 56rem) {
@@ -168,6 +219,18 @@ const leto = new Date().getFullYear();
     padding: 0.2rem 0.65rem;
     border-radius: 999px;
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--podlaga) 30%, transparent);
+  }
+
+  @media (max-width: 55.99rem) {
+    .noga__vrh {
+      gap: 1.75rem;
+      padding-bottom: 2rem;
+    }
+
+    .noga ul {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.6rem 1rem;
+    }
   }
 
   @media (min-width: 56rem) {

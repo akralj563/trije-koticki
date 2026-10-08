@@ -1,0 +1,188 @@
+---
+import { Image } from 'astro:assets';
+import Osnova from '../../layouts/Osnova.astro';
+import Glava from '../../components/Glava.astro';
+import PodstranUvod from '../../components/PodstranUvod.astro';
+import PozivEposta from '../../components/PozivEposta.astro';
+import Motiv from '../../components/Motiv.astro';
+import Zakljucek from '../../components/Zakljucek.astro';
+import { energija, urlStoritve, znamka } from '../../data/vsebina';
+---
+
+<Osnova
+  naslov={`Energijski kotiček | ${znamka.ime}`}
+  opis="Energijska podpora za odrasle in otroke, podpora in svetovanje, pregled energetskih centrov in Kansa Wand masaža."
+>
+  <Glava />
+  <main id="vsebina">
+    <PodstranUvod
+      drobtine={[{ href: '/', oznaka: 'Domov' }, { oznaka: 'Energijski kotiček' }]}
+      nadnaslov={energija.podnaslov}
+      naslov="Energijski kotiček"
+      uvod={energija.uvod}
+    />
+
+    <section class="ovoj pregled" aria-labelledby="pregled-naslov">
+      <h2 id="pregled-naslov" class="visually-hidden">Storitve</h2>
+      <ul class="pregled__seznam" data-stagger>
+        {energija.storitve.map((s, i) => (
+          <li>
+            <a class="kartica" href={urlStoritve(s.slug)}>
+              <div class="okvir kartica__vizual" aria-hidden="true">
+                {s.slika ? (
+                  <Image src={s.slika.src} alt="" widths={[480]} sizes="(min-width: 56rem) 26rem, 100vw" style={s.slika.pozicija ? `object-position: ${s.slika.pozicija}` : undefined} />
+                ) : (
+                  <div class="kartica__motiv"><Motiv vrsta="krogi" /></div>
+                )}
+              </div>
+              <div class="kartica__besedilo">
+                <p class="kartica__oznaka"><span aria-hidden="true">0{i + 1} · </span>{s.oznaka}</p>
+                <h3>{s.ime}</h3>
+                <p class="kartica__kratko">{s.kratko}</p>
+                <span class="kartica__vec" aria-hidden="true">Več o storitvi</span>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p class="pregled__opomba">
+        {energija.opomba} Slike na tej strani so začasni vizuali iz gradiva naročnice.
+      </p>
+    </section>
+
+    <PozivEposta
+      naslov="Ne veste, katera storitev je prava za vas?"
+      besedilo="Pišite mi in skupaj poiščeva pot, ki vam najbolj ustreza."
+      zadeva="Energijski kotiček – vprašanje"
+    />
+  </main>
+  <Zakljucek sKontaktom={false} />
+</Osnova>
+
+<script>
+  import '../../scripts/gibanje';
+</script>
+
+<style>
+  .pregled {
+    display: grid;
+    gap: 2rem;
+    padding-block: clamp(3rem, 2rem + 4vw, 6rem);
+  }
+
+  .pregled__seznam {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .kartica {
+    display: grid;
+    height: 100%;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    background: var(--gozd-globok);
+    color: var(--podlaga);
+    text-decoration: none;
+    transition: transform 0.14s var(--ease-out);
+  }
+
+  .kartica:active {
+    transform: scale(0.985);
+  }
+
+  .kartica:focus-visible {
+    outline-color: var(--glina-temna);
+  }
+
+  .kartica__vizual {
+    aspect-ratio: 16 / 10;
+    background:
+      radial-gradient(55% 60% at 50% 50%, color-mix(in srgb, var(--zarenje) 30%, transparent), transparent 75%),
+      #1d2d24;
+  }
+
+  .kartica__vizual :global(img) {
+    transition: transform var(--mehko);
+  }
+
+  .kartica__motiv {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: 70%;
+    translate: -50% -50%;
+    color: var(--zarenje);
+    opacity: 0.7;
+  }
+
+  .kartica__besedilo {
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+    padding: 1.4rem 1.5rem 1.6rem;
+  }
+
+  .kartica__oznaka {
+    font-size: var(--fs-drobna);
+    color: var(--zarenje);
+  }
+
+  .kartica h3 {
+    font-size: var(--fs-h3);
+    font-weight: 350;
+  }
+
+  .kartica__kratko {
+    font-size: var(--fs-majhna);
+    color: color-mix(in srgb, var(--podlaga) 80%, transparent);
+  }
+
+  .kartica__vec {
+    margin-top: 0.5rem;
+    font-size: var(--fs-majhna);
+    font-weight: 500;
+    color: var(--zarenje);
+  }
+
+  .kartica__vec::after {
+    content: ' →';
+  }
+
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .kartica:hover .kartica__vizual :global(img) {
+      transform: scale(1.04);
+    }
+  }
+
+  .pregled__opomba {
+    max-width: 44rem;
+    font-size: var(--fs-majhna);
+    color: var(--besedilo-mehko);
+  }
+
+  @media (min-width: 40rem) {
+    .pregled__seznam {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 40rem) and (max-width: 63.99rem) {
+    .pregled__seznam > li:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .pregled__seznam {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    /* 2 večji kartici zgoraj, 3 spodaj */
+    .pregled__seznam > li {
+      grid-column: span 2;
+    }
+
+    .pregled__seznam > li:nth-child(-n + 2) {
+      grid-column: span 3;
+    }
+  }
+</style>

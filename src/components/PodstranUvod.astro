@@ -1,0 +1,161 @@
+---
+// Temen uvodni pas podstrani: drobtine, nadnaslov, H1, uvod in po želji slika.
+// data-temno: glava je nad tem pasom svetla (glej Glava.astro).
+import { Image } from 'astro:assets';
+import Motiv from './Motiv.astro';
+import type { Slika } from '../data/vsebina';
+
+interface Props {
+  drobtine: { href?: string; oznaka: string }[];
+  nadnaslov: string;
+  naslov: string;
+  uvod: string;
+  slika?: Slika;
+  /** Oznaka začasnega gradiva na sliki (vir in pravica uporabe še nista potrjena). */
+  oznakaSlike?: string;
+}
+const { drobtine, nadnaslov, naslov, uvod, slika, oznakaSlike = 'Začasni vizual' } = Astro.props;
+---
+
+<section id="vrh" class:list={['pod-uvod', { 'pod-uvod--slika': slika }]} data-temno aria-labelledby="pod-naslov">
+  <div class="pod-uvod__krogi" aria-hidden="true"><Motiv vrsta="krogi" /></div>
+  <div class="ovoj pod-uvod__mreza">
+    <div class="pod-uvod__besedilo">
+      <nav class="pod-uvod__drobtine" aria-label="Drobtine">
+        <ol>
+          {drobtine.map((d) => (
+            <li>{d.href ? <a href={d.href}>{d.oznaka}</a> : <span aria-current="page">{d.oznaka}</span>}</li>
+          ))}
+        </ol>
+      </nav>
+      <p class="pod-uvod__nadnaslov" data-uvod>{nadnaslov}</p>
+      <h1 id="pod-naslov" data-uvod>{naslov}</h1>
+      <p class="pod-uvod__uvod" data-uvod>{uvod}</p>
+      <slot />
+    </div>
+    {slika && (
+      <figure class="okvir pod-uvod__slika" data-uvod>
+        <Image
+          src={slika.src}
+          alt={slika.alt}
+          widths={[480, slika.src.width]}
+          sizes="(min-width: 56rem) 30rem, calc(100vw - 2rem)"
+          loading="eager"
+          style={slika.pozicija ? `object-position: ${slika.pozicija}` : undefined}
+        />
+        {oznakaSlike && <figcaption class="znacka pod-uvod__znacka">{oznakaSlike}</figcaption>}
+      </figure>
+    )}
+  </div>
+</section>
+
+<style>
+  .pod-uvod {
+    position: relative;
+    padding-block: calc(var(--glava-visina) + clamp(2rem, 1rem + 4vw, 5rem)) clamp(3rem, 2rem + 4vw, 6rem);
+    background:
+      radial-gradient(50% 60% at 80% 20%, color-mix(in srgb, var(--zarenje) 18%, transparent), transparent 70%),
+      var(--gozd-globok);
+    color: var(--podlaga);
+    overflow: clip;
+  }
+
+  .pod-uvod__krogi {
+    position: absolute;
+    top: -6rem;
+    right: -14rem;
+    width: 40rem;
+    color: var(--zarenje);
+    opacity: 0.25;
+    pointer-events: none;
+  }
+
+  .pod-uvod__mreza {
+    position: relative;
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .pod-uvod__besedilo {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+    align-content: center;
+  }
+
+  .pod-uvod__drobtine ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    margin: 0 0 0.5rem;
+    padding: 0;
+    list-style: none;
+    font-size: var(--fs-drobna);
+    color: color-mix(in srgb, var(--podlaga) 72%, transparent);
+  }
+
+  .pod-uvod__drobtine li + li::before {
+    content: '/';
+    margin-right: 0.5rem;
+    opacity: 0.6;
+  }
+
+  .pod-uvod__drobtine a {
+    color: inherit;
+  }
+
+  .pod-uvod__nadnaslov {
+    font-family: var(--pisava-naslovi);
+    font-style: italic;
+    font-size: var(--fs-uvod);
+    color: var(--zarenje);
+  }
+
+  .pod-uvod h1 {
+    font-size: var(--fs-h1);
+    font-weight: 300;
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    max-width: 12ch;
+  }
+
+  .pod-uvod__uvod {
+    max-width: 34rem;
+    font-size: var(--fs-uvod);
+    line-height: 1.55;
+    color: color-mix(in srgb, var(--podlaga) 88%, transparent);
+  }
+
+  .pod-uvod :focus-visible {
+    outline-color: var(--zarenje);
+  }
+
+  .pod-uvod__slika {
+    margin: 0;
+    aspect-ratio: 4 / 3;
+    border-radius: clamp(1rem, 0.75rem + 1vw, 1.75rem);
+    box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.6);
+  }
+
+  .pod-uvod__znacka {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.75rem;
+  }
+
+  @media (min-width: 56rem) {
+    .pod-uvod--slika .pod-uvod__mreza {
+      grid-template-columns: 7fr 5fr;
+      align-items: center;
+      column-gap: clamp(2.5rem, 1rem + 4vw, 6rem);
+    }
+
+    .pod-uvod__slika {
+      aspect-ratio: 4 / 5;
+    }
+  }
+
+  :global(html.uvod-caka) .pod-uvod [data-uvod] {
+    opacity: 0;
+  }
+</style>

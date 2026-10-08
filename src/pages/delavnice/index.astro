@@ -1,0 +1,104 @@
+---
+// Vsebina iz delavnica.docx (lektorirano). Lokacija, cena, trajanje in termini niso podani.
+import Osnova from '../../layouts/Osnova.astro';
+import Glava from '../../components/Glava.astro';
+import PodstranUvod from '../../components/PodstranUvod.astro';
+import KarticeDelavnic from '../../components/KarticeDelavnic.astro';
+import PozivEposta from '../../components/PozivEposta.astro';
+import Zakljucek from '../../components/Zakljucek.astro';
+import { delavnice, mailto, znamka } from '../../data/vsebina';
+---
+
+<Osnova
+  naslov={`${delavnice.naslov} | ${znamka.ime}`}
+  opis="Ustvarjalne delavnice: izdelaj svoje mazilo ali svoj nakit. Predznanje ni potrebno, delavnice predvidoma potekajo ob sobotah."
+>
+  <Glava />
+  <main id="vsebina">
+    <PodstranUvod
+      drobtine={[{ href: '/', oznaka: 'Domov' }, { oznaka: delavnice.naslov }]}
+      nadnaslov={delavnice.podnaslov}
+      naslov={delavnice.naslov}
+      uvod={delavnice.uvod}
+    >
+      <p class="del-uvod__besedilo" data-uvod>{delavnice.besedilo}</p>
+      <a class="gumb del-gumb" href={mailto(delavnice.zadeva)} data-uvod>Prijava po e-pošti</a>
+    </PodstranUvod>
+
+    <section class="ovoj del-vrste" aria-labelledby="vrste-naslov">
+      <h2 id="vrste-naslov" class="visually-hidden">Vrste delavnic</h2>
+      <KarticeDelavnic raven="h3" />
+    </section>
+
+    <section class="ovoj del-info" aria-label="Komu so namenjene in kdaj">
+      <div class="del-info__blok" data-razkrij="levo">
+        <h2>Komu so namenjene</h2>
+        <p>{delavnice.komu}</p>
+        <p>{delavnice.predznanje}</p>
+      </div>
+      <div class="del-info__blok" data-razkrij="desno">
+        <h2>Okviren termin</h2>
+        <p>{delavnice.termin}</p>
+        <p>Točen datum, kraj in druge podrobnosti izveš ob prijavi po e-pošti.</p>
+      </div>
+    </section>
+
+    <PozivEposta naslov={delavnice.sklep} besedilo={delavnice.poziv} zadeva={delavnice.zadeva} gumb="Piši mi" />
+  </main>
+  <Zakljucek sKontaktom={false} />
+</Osnova>
+
+<script>
+  import '../../scripts/gibanje';
+</script>
+
+<style>
+  .del-uvod__besedilo {
+    max-width: 34rem;
+    color: color-mix(in srgb, var(--podlaga) 80%, transparent);
+  }
+
+  .del-gumb {
+    margin-top: 0.5rem;
+    background: var(--podlaga);
+    color: var(--gozd);
+  }
+
+  .del-gumb:hover {
+    background: var(--zarenje);
+  }
+
+  .del-vrste {
+    padding-top: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  }
+
+  .del-info {
+    display: grid;
+    gap: 1rem;
+    padding-block: 1rem clamp(3rem, 2rem + 4vw, 6rem);
+  }
+
+  .del-info__blok {
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+    padding: clamp(1.4rem, 1rem + 1.5vw, 2.5rem);
+    border-radius: 1.5rem;
+    box-shadow: inset 0 0 0 1px var(--rob-mocan);
+  }
+
+  .del-info__blok h2 {
+    font-size: var(--fs-h3);
+    font-weight: 350;
+  }
+
+  .del-info__blok p {
+    color: var(--besedilo-mehko);
+  }
+
+  @media (min-width: 40rem) {
+    .del-info {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

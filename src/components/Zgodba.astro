@@ -73,6 +73,34 @@ import { zgodba } from '../data/vsebina';
     color: var(--oliva-temna);
   }
 
+  /* Telefon: poudarek čez celo širino, pod njim besedilo in misel v dveh stolpcih */
+  @media (max-width: 39.99rem) {
+    .zgodba__mreza {
+      grid-template-columns: 1.15fr 1fr;
+      gap: 1.5rem 1.1rem;
+    }
+
+    .zgodba__poudarek {
+      grid-column: 1 / -1;
+    }
+
+    .zgodba__stolpec {
+      gap: 0.6rem;
+      font-size: var(--fs-majhna);
+      line-height: 1.5;
+    }
+
+    .zgodba__stolpec :global(.zgodba__list) {
+      width: 1.9rem;
+    }
+
+    .zgodba__misel {
+      align-self: end;
+      padding-left: 0.85rem;
+      font-size: 1.15rem;
+    }
+  }
+
   @media (min-width: 56rem) {
     .zgodba__mreza {
       grid-template-columns: repeat(12, minmax(0, 1fr));

@@ -1,0 +1,44 @@
+---
+// Predstavitveni pas z uradnim logotipom naročnice. Logotip je širok in ima polno ozadje (#ECDFCC),
+// zato stoji na plošči iste barve: robovi slike se zlijejo, razmerje ostane nespremenjeno.
+import { Image } from 'astro:assets';
+import { znamka } from '../data/vsebina';
+const { src, alt } = znamka.logotip;
+---
+
+<section class="znamka-pas" aria-label={znamka.ime}>
+  <div class="ovoj">
+    <figure class="znamka-pas__plosca" data-razkrij>
+      <Image
+        src={src}
+        alt={alt}
+        widths={[480, 800, src.width]}
+        sizes="(min-width: 56rem) 44rem, calc(100vw - 2rem)"
+        loading="lazy"
+        class="znamka-pas__logotip"
+      />
+    </figure>
+  </div>
+</section>
+
+<style>
+  .znamka-pas {
+    background: var(--podlaga);
+  }
+
+  .znamka-pas__plosca {
+    --logotip-ozadje: #ecdfcc;
+    margin: 0;
+    display: grid;
+    place-items: center;
+    padding: clamp(0.5rem, 0.25rem + 1.5vw, 2rem);
+    border-radius: clamp(1.25rem, 0.9rem + 1vw, 2rem);
+    background: var(--logotip-ozadje);
+  }
+
+  .znamka-pas__plosca :global(.znamka-pas__logotip) {
+    width: 100%;
+    max-width: 44rem;
+    height: auto;
+  }
+</style>

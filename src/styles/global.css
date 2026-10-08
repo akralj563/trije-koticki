@@ -36,6 +36,23 @@
   --glava-visina: 4.5rem;
   --hitro: 0.25s cubic-bezier(0.3, 0, 0.2, 1);
   --mehko: 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Telefon: zgoščena lestvica, da vsebina pade v manj zaslonov (namizje ostane enako). */
+@media (max-width: 39.99rem) {
+  :root {
+    --fs-drobna: 0.75rem;
+    --fs-majhna: 0.875rem;
+    --fs-osnova: 0.96875rem;
+    --fs-uvod: 1.03rem;
+    --fs-h3: 1.3rem;
+    --fs-h2: clamp(1.9rem, 1.3rem + 2.6vw, 2.4rem);
+    --fs-izjava: clamp(1.45rem, 1.1rem + 1.6vw, 1.75rem);
+    --fs-h1: clamp(2.5rem, 1.6rem + 4vw, 3.1rem);
+    --prostor-sekcije: 3.75rem;
+    --glava-visina: 3.75rem;
+  }
 }
 
 *,
@@ -48,6 +65,20 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   overflow-x: clip;
+  /* Brez sivega bliska ob dotiku; vsak tapljiv element ima svoj :active odziv. */
+  -webkit-tap-highlight-color: transparent;
+}
+
+a,
+button {
+  touch-action: manipulation;
+}
+
+.gumb,
+.povezava,
+button {
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -215,8 +246,100 @@ main[id] {
   transition: transform var(--hitro);
 }
 
-.povezava:hover::after {
+@media (hover: hover) and (pointer: fine) {
+  .povezava:hover::after {
+    transform: scaleX(1.6);
+  }
+}
+
+.povezava:active::after {
   transform: scaleX(1.6);
+}
+
+/* Odziv ob dotiku (telefon): takoj ob pritisku, ne šele ob spustu */
+@media (prefers-reduced-motion: no-preference) {
+  .gumb {
+    transition:
+      background-color var(--hitro),
+      color var(--hitro),
+      transform 0.14s var(--ease-out);
+  }
+
+  .gumb:active {
+    transform: scale(0.97);
+  }
+}
+
+/* Vodoravni drsnik (telefon/tablica): native scroll-snap, vidni rob naslednje kartice nakazuje drsenje */
+@media (max-width: 55.99rem) {
+  .drsnik {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--rob-strani);
+    padding-inline: var(--rob-strani);
+    padding-block: 0.5rem;
+    scrollbar-width: none;
+  }
+
+  .drsnik::-webkit-scrollbar {
+    display: none;
+  }
+
+  .drsnik > * {
+    flex: 0 0 min(84%, 24rem);
+    scroll-snap-align: start;
+  }
+}
+
+@media (min-width: 56rem) {
+  .pike {
+    display: none !important;
+  }
+}
+
+/* Pike pod drsnikom: kaže položaj in omogoča skok na kartico */
+.pike {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  margin-top: 0.9rem;
+}
+
+.pike button {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+.pike button::before {
+  content: '';
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.25;
+  transition:
+    width 0.3s var(--ease-out),
+    opacity 0.3s var(--ease-out);
+}
+
+.pike button[aria-current='true']::before {
+  width: 1.5rem;
+  opacity: 0.85;
+}
+
+html:not(.js) .pike {
+  display: none;
 }
 
 /* Diskretna oznaka začasnega gradiva (samo prototip) */

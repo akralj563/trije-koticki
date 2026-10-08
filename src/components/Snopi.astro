@@ -15,7 +15,10 @@ const razmerja = ['4 / 5', '3 / 5', '1 / 1'];
       <Motiv vrsta="vejica" class="snopi__vejica" />
     </div>
 
-    <ul class="snopi__mreza" data-stagger>
+  </div>
+  <!-- Telefon: vodoravni drsnik; namizje: zamaknjena mreža treh stolpcev -->
+  <div class="ovoj snopi__ovoj">
+    <ul class="snopi__mreza drsnik" data-stagger data-drsnik>
       {snopi.izdelki.map((s, i) => (
         <li class="snop">
           <figure>
@@ -42,6 +45,9 @@ const razmerja = ['4 / 5', '3 / 5', '1 / 1'];
         </li>
       ))}
     </ul>
+    <div class="pike" data-pike role="group" aria-label="Izberi snop">
+      {snopi.izdelki.map((s) => <button type="button" aria-label={s.ime}></button>)}
+    </div>
   </div>
 </section>
 
@@ -136,9 +142,67 @@ const razmerja = ['4 / 5', '3 / 5', '1 / 1'];
   }
 
   @media (max-width: 55.99rem) {
+    .snopi__glava {
+      gap: 0.6rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .snopi__glava p {
+      font-size: var(--fs-majhna);
+    }
+
+    .snopi__glava :global(.snopi__vejica) {
+      right: 0;
+      top: -1.5rem;
+      width: 3rem;
+    }
+
+    /* Drsnik sega do robov zaslona, zato brez notranjega roba ovoja */
+    .snopi__ovoj {
+      padding-inline: 0;
+    }
+
+    .snopi__mreza {
+      gap: 0.75rem;
+    }
+
+    .snopi__mreza > li {
+      flex-basis: min(64%, 17rem);
+    }
+
+    figure {
+      gap: 0.75rem;
+    }
+
     /* Na telefonu enaka, umirjena razmerja */
     .snop__foto {
-      aspect-ratio: 4 / 3 !important;
+      aspect-ratio: 1 / 1 !important;
+    }
+
+    .snop h3 {
+      font-size: 1.25rem;
+    }
+
+    .snop__oblika {
+      font-size: var(--fs-majhna);
+    }
+
+    .snop__opis p:not([class]) {
+      font-size: 0.8rem;
+      line-height: 1.45;
+    }
+
+    .snop__cena {
+      margin-top: 0.2rem;
+      font-size: var(--fs-drobna);
+    }
+
+    .snop__cena strong {
+      font-size: 1.15rem;
+    }
+
+    .pike {
+      color: var(--gozd);
     }
   }
 
